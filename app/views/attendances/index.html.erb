@@ -75,7 +75,7 @@
           <td class="table-body">
             <!-- 自身の勤怠で出社時間と退社時間が空なら表示  -->
             <% if current_user == @user && attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
-              <%= f.hidden_field :update_type, :value => "attendance_time"%>
+              <%= f.hidden_field :update_type, :value => "arriving_at"%>
               <%= f.submit "出社", class: "btn btn-sm btn-primary" %>
             <% end %>
           </td>
@@ -89,7 +89,7 @@
           <td class="table-body">
             <!-- 出社時間入力済みかつ退社時間が空なら表示  -->
             <% if current_user == @user && !attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
-              <%= f.hidden_field :update_type, :value => "leaving_time"%>
+              <%= f.hidden_field :update_type, :value => "leaving_at"%>
               <%= f.submit "退社", class: "btn btn-sm btn-primary" %>
             <% end %>
           </td>
@@ -99,11 +99,7 @@
             <% if !attendance.arriving_at.nil? && !attendance.leaving_at.nil? %>
             <%= f.hidden_field :update_type, :value => "arriving_at"%>
              <%= f.hidden_field :update_type, :value => "leaving_at"%>
-             
-             <% present_time = (attendance.leaving_at - attendance.arriving_at) / 3600 %>
-             <% total_present_time += present_time %>
-             
-             <%=format("%.2f", present_time) %>
+             <%= working_hours(attendance.arriving_at,attendance.leaving_at) if attendance.arriving_at.present? && attendance.leaving_at.present? %>
              
             <% end %>
           </td>

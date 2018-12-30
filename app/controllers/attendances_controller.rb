@@ -14,7 +14,6 @@ class AttendancesController < ApplicationController
     end
     #最終日を取得する
     @last_day = @first_day.end_of_month
-
     # 今月の初日から最終日の期間分を取得
     (@first_day..@last_day).each do |date|
       # 該当日付のデータがないなら作成する
@@ -29,6 +28,7 @@ class AttendancesController < ApplicationController
   end
   
   def new
+    @attendance = Attendance.new
   end
   
   def create
@@ -140,7 +140,7 @@ class AttendancesController < ApplicationController
         end
       end #eachの締め
     end
-    redirect_to user_url(@user, params:{ id: @user.id, first_day: params[:first_day]})
+    redirect_to attendances_url(@user, params:{ id: @user.id, first_day: params[:first_day]})
   end
   
   private
