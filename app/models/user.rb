@@ -52,6 +52,14 @@ class User < ApplicationRecord
     UserMailer.account_activation(self).deliver_now
   end
 
+  # クラスメソッド
+  scope :attendancing, -> {
+    joins(:attendances)
+      .where('attendances.attendance_date = ?', Time.now.localtime('+09:00').to_date)
+      .where('attendances.arriving_at < ?', DateTime.current)
+      .where('attendances.leaving_at is null')
+  } 
+  
  private
 
     # メールアドレスをすべて小文字にする

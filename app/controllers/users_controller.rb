@@ -47,6 +47,10 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
+  def attendance_users
+    @users = User.attendancing
+  end
+  
   private
 
     def user_params

@@ -7,7 +7,6 @@ module AttendancesHelper
   def working_hours(a,b)
     arriving_at = Time.mktime(a.year, a.month, a.day, a.hour, a.min, 0, 0)
     leaving_at = Time.mktime(b.year, b.month, b.day, b.hour, b.min, 0, 0)
-    #binding.pry
     #(((leaving_at - arriving_at) / 60) / 60).truncate()
     (Time.parse("1/1") + (leaving_at - arriving_at)).strftime("%H時間%M分")
   end
