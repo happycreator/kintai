@@ -7,10 +7,11 @@ class CreateAttendances < ActiveRecord::Migration[5.0]
       t.date :attendance_date
       t.datetime :overtime
       t.text :task_memo
-      t.integer :overwork_confirmation
-      t.integer :change_confirmation
+      t.integer :change_confirmation_approver_id
+      t.integer :change_confirmation_status
+      t.integer :overwork_status
+      t.integer :overwork_approver_id
       t.references :user
-
       t.timestamps
     end
   end

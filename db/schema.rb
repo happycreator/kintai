@@ -19,11 +19,13 @@ ActiveRecord::Schema.define(version: 20181219130456) do
     t.date     "attendance_date"
     t.datetime "overtime"
     t.text     "task_memo"
-    t.integer  "overwork_confirmation"
-    t.integer  "change_confirmation"
+    t.integer  "change_confirmation_approver_id"
+    t.integer  "change_confirmation_status"
+    t.integer  "overwork_status"
+    t.integer  "overwork_approver_id"
     t.integer  "user_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 

@@ -1,0 +1,4 @@
+<% form_for Attendance.new, remote: true do |f| %>
+  <% f.text_area :arriving_at, label: '出社' %>
+  <% f.button :submit, class: 'btn btn-primary' %>
+<% end %>
