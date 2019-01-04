@@ -2,8 +2,25 @@
   <%= gravatar_for user, size: 50 %>
   <%= link_to user.name, user %>
   <% if current_user.admin? && !current_user?(user) %>
-    | <%= link_to "削除", user, method: :delete,
-                                  data: { confirm: "本当に削除しますか？" }, 
-                          :style=>"color:white;", class: "btn btn-sm btn-primary" %>
+    | <%= link_to "削除", user, method: :delete, data: { confirm: "本当に削除しますか？" }, :style=>"color:white;", class: "btn btn-sm btn-primary" %>
   <% end %>
 </li>
+<div class="panel-group">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapse2" role="button" aria-expanded="false" aria-controls="collapseExample">
+          編集
+        </a>
+      </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse">
+      <ul class="list-group">
+        <li class="list-group-item">One</li>
+        <li class="list-group-item">Two</li>
+        <li class="list-group-item">Three</li>
+      </ul>
+      <div class="panel-footer">フッター</div>
+    </div>
+  </div>
+</div>
