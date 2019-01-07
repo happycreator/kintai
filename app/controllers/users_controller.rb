@@ -50,7 +50,7 @@ class UsersController < ApplicationController
   def attendance_users
     @users = User.attendancing
   end
-  
+
   private
 
     def user_params

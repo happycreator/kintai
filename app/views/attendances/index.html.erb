@@ -4,7 +4,7 @@
   <thead>
    <div class = "header">  
     <tr>
-      <th class="table-header">
+      <th colspan="2" class="table-header" width="250">
         <%= link_to "◀︎", attendances_path(params: { id: @user.id, first_day: @first_day.prev_month }), 
             style:"color:white", class: 'btn btn-default btn-primary' %>  
             　<%= @first_day.strftime("%Y年%m月") %>　時間管理表　
@@ -13,44 +13,49 @@
      </th>
      
       <th class="table-header">指定勤務時間　<%= time_format(@user.start_attendance_time) %> </th>
-      <th colspan="3" class="table-header">基本時間 <%= time_format(@user.base_attendance_time) %></th>
-      
+      <th colspan="2" class="table-header">基本時間 <%= time_format(@user.base_attendance_time) %></th>
       <th class="table-header">初日  <%= @first_day.strftime("%m/%d") %></th>
+      <th class="table-header">締め　<%= @last_day.strftime("%m/%d") %></th>
     </tr>
     
     <tr>
       <th class="table-header">所属 <%= @user.role %>　</th>
+      <th class="table-header">社員番号 <%= @user.role %>　</th>
       <th class="table-header">氏名　<%= @user.name %></th>
       <th class="table-header">コード</th>
       <th class="table-header"><%= "0921" %></th>
-      <th class="table-header">出勤日数　<%= attendance_count %>日</th>
-      <th class="table-header">締め　<%= @last_day.strftime("%m/%d") %></th>
+      <th colspan="2" class="table-header">出勤日数　<%= attendance_count %>日</th>
     </tr>
   </div>  
   </thead>
 </table>
 <!--attendance_edit_pathに、userのidと今月の値を渡す-->
-<%= link_to "勤怠を編集", attendance_edit_url(@attendance, params: { id: @user.id, first_day: @first_day }), 
-                          :style=>"color:white;", class: "btn btn-sm btn-primary"   %>
+<%= link_to "勤怠を編集", attendance_edit_url(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-sm btn-primary"   %>
+<%= link_to "CSV出力", attendance_edit_url(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-sm btn-primary"   %>
+<%= link_to "勤怠修正ログ（承認済）", attendance_edit_url(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-sm btn-primary"   %>
 <table class="table table-bordered table-striped table-condensed">
   <thead>
     <tr>
-      <th rowspan="2" class="table-header">残業申請</th>
-      <th rowspan="2" class="table-header">日付</th>
-      <th rowspan="2" class="table-header">曜日</th>
-      <th colspan="3" class="table-header">出社</th>
-      <th colspan="3" class="table-header">退社</th>
-      <th rowspan="2" class="table-header">在社時間</th>
-      <th rowspan="2" class="table-header">備考</th>
+      <th rowspan="2" class="table-header" width="90">残業申請</th>
+      <th rowspan="2" class="table-header" width="50">日付</th>
+      <th rowspan="2" class="table-header" width="50">曜日</th>
+      <th colspan="3" class="table-header" width="180">出社</th>
+      <th colspan="3" class="table-header" width="180">退社</th>
+      <th rowspan="2" class="table-header" width="100">在社時間</th>
+      <th rowspan="2" class="table-header" width="70">備考</th>
+      <th colspan="2" class="table-header" width="120">終了予定時間</th>
+      <th rowspan="2" class="table-header" width="100">時間外時間</th>
+      <th rowspan="2" class="table-header" width="100">業務処理内容</th>
+      <th rowspan="2" class="table-header" width="130">指示者確認（印）</th>
     </tr>
     
-  <tr>   
-     <th             class="table-header">時</th>
-     <th             class="table-header">分</th>
-     <th             class="table-header">  </th>
-     <th             class="table-header">時</th>
-     <th             class="table-header">分</th>
-     <th             class="table-header">  </th>
+    <tr>   
+     <th class="table-header" width="50">時</th>
+     <th class="table-header" width="50">分</th>
+     <th class="table-header" width="50">  </th>
+     <th class="table-header" width="50">時</th>
+     <th class="table-header" width="50">分</th>
+     <th class="table-header" width="50">  </th>
     </tr>
   </thead>
     
@@ -62,8 +67,7 @@
       <%= f.hidden_field :user_id, :value => "#{@user.id}"%>
       <%= f.hidden_field :id, :value => "#{attendance.id}"%>
         <tr>
-          <td class="table-body"><%= link_to "残業申請", new_attendance_path, 
-                          :style=>"color:white;", class: "btn btn-sm btn-primary"   %></td>
+          <td class="table-body"><%= link_to "残業申請", new_attendance_path, :style=>"color:white;", class: "btn btn-sm btn-primary" %></td>
      　　　  <!--日付-->
           <td class="table-body"><%= attendance.attendance_date.month %>/<%= attendance.attendance_date.day %></td>
           <!--曜日-->

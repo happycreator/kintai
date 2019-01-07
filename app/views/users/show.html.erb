@@ -6,6 +6,45 @@
         <%= gravatar_for @user %>
         <%= @user.name %>
       </h1>
+      <ul>
+        <%= link_to "勤怠の登録をする", attendances_path, class: "nav-link" %> 
+      </ul>
     </section>
   </aside>
 </div>
+
+<table class="table">
+    <thead>
+      <!-- セルに背景色を変更 -->
+        <tr class="active">
+            <th>#</th>
+            <th>名前</th>
+            <th>メールアドレス</th>
+            <th>所属</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- 行全体をブルーに -->
+        <tr class="info">
+            <th>1</th>
+            <td><%= @user.name %></td>
+            <td><%= @user.email %></td>
+            <td><%= @user.role %></td>
+        </tr>
+　　　<thead>
+        <tr class="active">
+            <th>#</th>
+            <th>社員番号</th>
+            <th>指定勤務時間</th>
+            <th>基本勤務時間</th>
+        </tr>
+    </thead>
+        <tr>
+            <!-- セルに背景色を変更 -->
+            <th class="info">2</th>
+            <td class="info">Taro</td>
+            <td class="info"><%= time_format(@user.start_attendance_time) %></td>
+            <td class="info"><%= time_format(@user.base_attendance_time) %></td>
+        </tr>
+    </tbody>
+</table>
