@@ -32,6 +32,12 @@ class AttendancesController < ApplicationController
   end
   
   def create
+    @attendance = Attendance.new(attendances_params)
+    if @attendance.save
+      redirect_to attendances_path, notice: '残業申請を送付しました。' 
+    else
+      redirect_to attendances_path, notice: '残業申請は失敗しました。' 
+    end
   end
   
   def show

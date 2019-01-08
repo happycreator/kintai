@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :account_activations, only: [:edit]
   resources :attendances
   get  '/attendance_users',    to: 'users#attendance_users'
+  resources :basic_information
   
   # 出勤画面表示・編集
   get  '/attendance_update', to: 'attendances#attendance_update'

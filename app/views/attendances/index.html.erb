@@ -67,7 +67,8 @@
       <%= f.hidden_field :user_id, :value => "#{@user.id}"%>
       <%= f.hidden_field :id, :value => "#{attendance.id}"%>
         <tr>
-          <td class="table-body"><%= link_to "残業申請", new_attendance_path, :style=>"color:white;", class: "btn btn-sm btn-primary" %></td>
+          <td class="table-body"><%= link_to "残業申請", new_attendance_path, remote: true, :style=>"color:white;", class: "btn btn-sm btn-primary" %></td>
+     　  　<div id="overwork-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
      　　　  <!--日付-->
           <td class="table-body"><%= attendance.attendance_date.month %>/<%= attendance.attendance_date.day %></td>
           <!--曜日-->

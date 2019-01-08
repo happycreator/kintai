@@ -1,4 +1,20 @@
-<% form_for Attendance.new, remote: true do |f| %>
-  <% f.text_area :arriving_at, label: '出社' %>
-  <% f.button :submit, class: 'btn btn-primary' %>
-<% end %>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <h1>残業申請</h1>
+    <%= form_for(@attendance, remote: true) do |f| %>
+      <%= f.label :日付 %>
+      <%= f.text_field :attendance_date, class: 'form-control' %>
+
+      <%= f.label :終了予定時間 %>
+      <%= f.time_field :overtime, class: 'form-control' %>
+      
+      <%= f.label :業務処理内容 %>
+      <%= f.text_field :task_memo, class: 'form-control' %>
+      
+      <%= f.label :指示者確認（印） %>
+      <%= f.text_field :overwork_approver_id, class: 'form-control' %>
+
+      <%= f.submit "変更を送信する", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
