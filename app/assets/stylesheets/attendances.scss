@@ -3,6 +3,11 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .table th, .table td {
-text-align: center;
-vertical-align: middle;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.actions {
+	float:left;
+	padding-bottom:20px;  
 }
