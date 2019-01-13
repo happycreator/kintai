@@ -42,7 +42,7 @@
         <tr>
             <!-- セルに背景色を変更 -->
             <th class="info">2</th>
-            <td class="info">Taro</td>
+            <td class="info"><%= @user.employee_number %></td>
             <td class="info"><%= time_format(@user.start_attendance_time) %></td>
             <td class="info"><%= time_format(@user.base_attendance_time) %></td>
         </tr>

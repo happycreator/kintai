@@ -1,5 +1,5 @@
 <% provide(:title, 'Sign up') %>
-<h2>名前、メールアドレス、所属、パスワード、指定勤務時間、基本勤務時間をご入力のうえ【新規ユーザーの追加】をしてください。</h2>
+<h2>名前、メールアドレス、所属、パスワード、指定勤務時間、基本勤務時間をご入力のうえ、【新規ユーザーの追加】をしてください。</h2>
 
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
@@ -14,6 +14,9 @@
       
       <%= f.label :所属 %>
       <%= f.text_field :role, class: 'form-control' %>
+      
+      <%= f.label :社員番号 %>
+      <%= f.text_field :employee_number, class: 'form-control' %>
 
       <%= f.label :パスワード %>
       <%= f.password_field :password, class: 'form-control' %>

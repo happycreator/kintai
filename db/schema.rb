@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20181219130456) do
     t.string   "activation_digest"
     t.boolean  "activated",             default: false
     t.datetime "activated_at"
+    t.integer  "employee_number"
     t.integer  "role"
     t.datetime "base_attendance_time"
     t.datetime "start_attendance_time"
