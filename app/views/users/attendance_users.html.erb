@@ -7,7 +7,8 @@
     </tr>  
     <% @users.each do |user| %>
     <tr>
-      <td><%= link_to(user.name) %></td>
+      <td class="table-body"><%= link_to(user.employee_number) %></td>
+      <td class="table-body"><%= link_to(user.name) %></td>
     </tr>
     <% end %>
   </table>
