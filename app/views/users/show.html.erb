@@ -17,33 +17,33 @@
     <thead>
       <!-- セルに背景色を変更 -->
         <tr class="active">
-            <th>#</th>
             <th>名前</th>
             <th>メールアドレス</th>
             <th>所属</th>
+            <th>社員番号</th>
         </tr>
     </thead>
     <tbody>
         <!-- 行全体をブルーに -->
         <tr class="info">
-            <th>1</th>
             <td><%= @user.name %></td>
             <td><%= @user.email %></td>
             <td><%= @user.role %></td>
+            <td><%= @user.employee_number %></td>
         </tr>
 　　　<thead>
         <tr class="active">
-            <th>#</th>
-            <th>社員番号</th>
-            <th>指定勤務時間</th>
+            <th>カードID</th>
+            <th>指定勤務開始時間</th>
+            <th>指定勤務終了時間</th>
             <th>基本勤務時間</th>
         </tr>
     </thead>
         <tr>
             <!-- セルに背景色を変更 -->
-            <th class="info">2</th>
             <td class="info"><%= @user.employee_number %></td>
             <td class="info"><%= time_format(@user.start_attendance_time) %></td>
+            <td class="info"><%= time_format(@user.end_attendance_time) %></td>
             <td class="info"><%= time_format(@user.base_attendance_time) %></td>
         </tr>
     </tbody>

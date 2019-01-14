@@ -55,7 +55,7 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :email, :password,:role, :employee_number,
-                                   :base_attendance_time, :start_attendance_time, :password_confirmation)
+                                   :base_attendance_time, :start_attendance_time, :end_attendance_time, :password_confirmation)
     end
  # ログイン済みユーザーかどうか確認
     def logged_in_user

@@ -24,8 +24,11 @@
       <%= f.label :password_confirmation, "パスワード確認" %>
       <%= f.password_field :password_confirmation, class: 'form-control' %>
       
-      <%= f.label :指定勤務時間 %>
+      <%= f.label :指定勤務開始時間 %>
       <%= f.time_field :start_attendance_time, class: 'form-control' %>
+      
+      <%= f.label :指定勤務終了時間 %>
+      <%= f.time_field :end_attendance_time, class: 'form-control' %>
 
       <%= f.label :基本勤務時間 %>
       <%= f.time_field :base_attendance_time, class: 'form-control' %>
