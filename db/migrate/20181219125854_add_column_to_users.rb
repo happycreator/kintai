@@ -5,5 +5,7 @@ class AddColumnToUsers < ActiveRecord::Migration[5.0]
     add_column :users, :base_attendance_time, :datetime
     add_column :users, :start_attendance_time, :datetime
     add_column :users, :end_attendance_time, :datetime
+    add_column :users, :card_id, :string
+    add_column :users, :is_senior, :boolean
   end
 end

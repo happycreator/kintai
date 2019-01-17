@@ -45,6 +45,8 @@ ActiveRecord::Schema.define(version: 20181219130456) do
     t.datetime "base_attendance_time"
     t.datetime "start_attendance_time"
     t.datetime "end_attendance_time"
+    t.string   "card_id"
+    t.boolean  "is_senior"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

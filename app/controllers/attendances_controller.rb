@@ -12,7 +12,7 @@ class AttendancesController < ApplicationController
       # 表示月が無ければ、今月分を表示
       @first_day = Date.new(Date.today.year, Date.today.month, 1)
     end
-    #最終日を取得する
+    # 最終日を取得する
     @last_day = @first_day.end_of_month
     # 今月の初日から最終日の期間分を取得
     (@first_day..@last_day).each do |date|
@@ -28,7 +28,10 @@ class AttendancesController < ApplicationController
   end
   
   def new
+    @attendance_date = params[:attendance_date]
+    @wday = params[:wday]
     @attendance = Attendance.new
+    @seniors = User.where(is_senior: true).map(&:name)
   end
   
   def create
