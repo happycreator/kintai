@@ -54,7 +54,7 @@ class UsersController < ApplicationController
   private
 
     def user_params
-      params.require(:user).permit(:name, :email, :password,:role, :employee_number,
+      params.require(:user).permit(:name, :email, :password,:role, :employee_number, :card_id,
                                    :base_attendance_time, :start_attendance_time, :end_attendance_time, :password_confirmation)
     end
  # ログイン済みユーザーかどうか確認

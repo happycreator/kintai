@@ -35,7 +35,15 @@ class AttendancesController < ApplicationController
   end
   
   def create
-    @attendance = Attendance.new(attendances_params)
+    @attendance = Attendance.new
+    @attendance.attendance_date = params[:attendance_date].to_date
+    
+    tmp_date = params[:attendance_date].to_date
+    tmp_hour = params[:attendance][:overtime].split(":")[0].to_i
+    tmp_min = params[:attendance][:overtime].split(":")[1].to_i
+
+    @attendance.overtime = tmp_date + tmp_hour.hour + tmp_min.minute
+    @attendance.task_memo = params[:attendance][:task_memo]
     if @attendance.save
       redirect_to attendances_path, notice: '残業申請を送付しました。' 
     else
