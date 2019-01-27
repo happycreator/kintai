@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190127142339) do
+ActiveRecord::Schema.define(version: 20190127162220) do
+
+  create_table "attendance_logs", force: :cascade do |t|
+    t.date     "attendance_date"
+    t.datetime "arriving_at_before_update"
+    t.datetime "leaving_at_before_update"
+    t.datetime "arriving_at_after_update"
+    t.datetime "leaving_at_after_update"
+    t.integer  "change_confirmation_approver_id"
+    t.date     "approval_date"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
 
   create_table "attendances", force: :cascade do |t|
     t.datetime "arriving_at"

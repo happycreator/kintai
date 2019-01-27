@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  attendance_date: 2019-01-27
+  arriving_at_before_update: 2019-01-27 16:22:20
+  leaving_at_before_update: 2019-01-27 16:22:20
+  arriving_at_after_update: 2019-01-27 16:22:20
+  leaving_at_after_update: 2019-01-27 16:22:20
+  change_confirmation_approver_id: 1
+  approval_date: 2019-01-27
+
+two:
+  attendance_date: 2019-01-27
+  arriving_at_before_update: 2019-01-27 16:22:20
+  leaving_at_before_update: 2019-01-27 16:22:20
+  arriving_at_after_update: 2019-01-27 16:22:20
+  leaving_at_after_update: 2019-01-27 16:22:20
+  change_confirmation_approver_id: 1
+  approval_date: 2019-01-27
