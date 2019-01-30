@@ -38,7 +38,7 @@
           <!--備考の入力フォーム-->
           <td><%= tf.text_field :note, :size=>"100", class: "form-control tf" %></td>
           <!--指示者確認（印）チェックボックス-->
-          <td></td>
+          <td><%= select :user, :name, @seniors,  :prompt => "選択してください" %></td>
         </tr>
       <% end %>
       <% end %>

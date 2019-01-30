@@ -29,7 +29,7 @@
 <div class="actions">
   <%= link_to "　　　勤怠を編集　　　", attendance_edit_url(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-primary btn-sm" %>
   <%= link_to "　　　CSV出力　　　", attendances_path(format: :csv), class: "btn btn-primary btn-sm" %>
-  <%= link_to "勤怠修正ログ（承認済）", attendance_edit_url(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-primary btn-sm" %>
+  <%= link_to "勤怠修正ログ（承認済）", attendance_logs_path(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-primary btn-sm" %>
 </div>
 
 <table class="table table-bordered table-striped table-condensed">
@@ -65,7 +65,7 @@
     </tr>
   </thead>
   <tbody>
-  <!-- users_controller.rbの@attendancesの中身を見にいく-->
+  <!-- attendance_controller.rbの@attendancesの中身を見にいく-->
   <% total_present_time = 0 %>
   <% @attendances.each do |attendance| %>
   <%= form_for(attendance, url: attendance_update_path ) do |f| %>
@@ -147,7 +147,7 @@
       </td>
       <td colspan="5" class="table-body"></td>
       <td class="table-body">所属長承認
-        <%= select :page, :name, [["上長A", "rails_base"], ["上長B", "ruby_base"], ["上長C", "ruby_base"]],  :prompt => "選択してください" %>
+        <%= select :user, :name, @seniors, :prompt => "選択してください" %>
         <%= link_to "申請", new_attendance_path, remote: true, :style =>"color:white;", class: "btn btn-primary btn-block btn-sm" %>
       </td>
     </tr>

@@ -1,6 +1,8 @@
 class AttendancesController < ApplicationController
   def index
     @user = current_user
+    #指示者確認（印）上長の選択
+    @seniors = User.where(is_senior: true).map(&:name)
     
     # 曜日表示用に使用する
     @youbi = %w[日 月 火 水 木 金 土]
@@ -18,9 +20,9 @@ class AttendancesController < ApplicationController
     (@first_day..@last_day).each do |date|
       # 該当日付のデータがないなら作成する
       #(例)user1に対して、今月の初日から最終日の値を取得する
-      if !@user.attendances.any? {|attendance| attendance.attendance_date == date }
-        linked_attendance = Attendance.new(user_id: @user.id, attendance_date: date)
-        linked_attendance.save
+      if !@user.attendances.any?
+        #linked_attendance = Attendance.new(user_id: @user.id, attendance_date: date)
+        #linked_attendance.save
       end
     end
     # 表示期間の勤怠データを日付順にソートして取得 show.html.erb、 <% @attendances.each do |attendance| %>からの情報
@@ -41,8 +43,14 @@ class AttendancesController < ApplicationController
     tmp_date = params[:attendance_date].to_date
     tmp_hour = params[:attendance][:overtime].split(":")[0].to_i
     tmp_min = params[:attendance][:overtime].split(":")[1].to_i
-
+    
     @attendance.overtime = tmp_date + tmp_hour.hour + tmp_min.minute
+    if params[:overday_check]
+      @attendance.overtime = @attendance.overtime + 1.day
+    end 
+    
+    @attendance.user_id = current_user.id
+    @attendance.overwork_approver_id = User.where(name: params[:user][:name]).first.id
     @attendance.task_memo = params[:attendance][:task_memo]
     if @attendance.save
       redirect_to attendances_path, notice: '残業申請を送付しました。' 
@@ -83,12 +91,14 @@ class AttendancesController < ApplicationController
     end  
     #出社・退社押下した日付及び現在のuser idを@userに返す
     @user = User.find(params[:attendance][:user_id])
-    redirect_to @user
+    redirect_to attendances_path
   end
   
   
   def attendance_edit
     @user = User.find(params[:id])
+    #指示者確認（印）上長の選択
+    @seniors = User.where(is_senior: true).map(&:name)
 
     # 曜日表示用に使用する
     @youbi = %w[日 月 火 水 木 金 土]

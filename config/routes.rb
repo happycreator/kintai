@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get  '/attendance_users',    to: 'users#attendance_users'
   resources :basic_information
   resources :working_places
+  resources :attendance_logs
   
   # 出勤画面表示・編集
   get  '/attendance_update', to: 'attendances#attendance_update'
