@@ -20,9 +20,9 @@ class AttendancesController < ApplicationController
     (@first_day..@last_day).each do |date|
       # 該当日付のデータがないなら作成する
       #(例)user1に対して、今月の初日から最終日の値を取得する
-      if !@user.attendances.any?
-        #linked_attendance = Attendance.new(user_id: @user.id, attendance_date: date)
-        #linked_attendance.save
+      if !@user.attendances.where('attendance_date = ?', date).present? #{|attendance| attendance.attendance_date == date }
+        linked_attendance = Attendance.new(user_id: @user.id, attendance_date: date)
+        linked_attendance.save
       end
     end
     # 表示期間の勤怠データを日付順にソートして取得 show.html.erb、 <% @attendances.each do |attendance| %>からの情報
@@ -30,26 +30,35 @@ class AttendancesController < ApplicationController
   end
   
   def new
-    @attendance_date = params[:attendance_date]
-    @wday = params[:wday]
-    @attendance = Attendance.new
-    @seniors = User.where(is_senior: true).map(&:name)
   end
   
   def create
-    @attendance = Attendance.new
-    @attendance.attendance_date = params[:attendance_date].to_date
+  end
+  
+  def show
+  end
+  
+  def edit
+    @attendance = Attendance.find(params[:id])
+    @seniors = User.where(is_senior: true).map(&:name)
+    @youbi = %w[日 月 火 水 木 金 土]
+  end
+  
+  def update
+    @attendance = Attendance.find(params[:id])
     
-    tmp_date = params[:attendance_date].to_date
+    tmp_date = @attendance.attendance_date
     tmp_hour = params[:attendance][:overtime].split(":")[0].to_i
     tmp_min = params[:attendance][:overtime].split(":")[1].to_i
-    
     @attendance.overtime = tmp_date + tmp_hour.hour + tmp_min.minute
+    
+    #チェックボックスはifで分岐だけでデータベースには入れない
     if params[:overday_check]
       @attendance.overtime = @attendance.overtime + 1.day
     end 
     
     @attendance.user_id = current_user.id
+    #指示者確認・パラメーターでユーザーの名前を検索してidを入れる
     @attendance.overwork_approver_id = User.where(name: params[:user][:name]).first.id
     @attendance.task_memo = params[:attendance][:task_memo]
     if @attendance.save
@@ -57,15 +66,6 @@ class AttendancesController < ApplicationController
     else
       redirect_to attendances_path, notice: '残業申請は失敗しました。' 
     end
-  end
-  
-  def show
-  end
-  
-  def edit
-  end
-  
-  def update
   end
   
   def destroy

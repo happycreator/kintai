@@ -19,11 +19,9 @@
           <tbody>
             <tr>
               <!--日付-->
-              <td class = "attendance_date"><%= @attendance_date %></td>
-              <%= hidden_field_tag :attendance_date, @attendance_date %>
+              <td class = "attendance_date"><%= f.object.attendance_date.month %>/<%= f.object.attendance_date.day %></td>
               <!--曜日-->
-              <td class = "attendance_date"><%= @wday %></td>
-              <%= hidden_field_tag :wday, @wday %>
+              <td class = "attendance_date"><%= @youbi[f.object.attendance_date.wday] %></td>
               <!--終了予定時間-->
               <td><%= f.time_field :overtime %></td>
               <!--翌日のチェックボックス-->

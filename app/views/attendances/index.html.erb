@@ -73,7 +73,7 @@
   <%= f.hidden_field :id, :value => "#{attendance.id}"%>
     <tr>
       <!-- 残業申請ボタンを押すとモーダルへ飛ぶ-->
-      <td class="table-body"><%= link_to "残業申請", new_attendance_path(attendance_date: "#{attendance.attendance_date.month}/#{attendance.attendance_date.day}", wday: @youbi[attendance.attendance_date.wday]), remote: true, :style=>"color:white;", class: "btn btn-sm btn-primary" %>
+      <td class="table-body"><%= link_to "残業申請", edit_attendance_path(attendance), remote: true, :style=>"color:white;", class: "btn btn-sm btn-primary" %>
         <div id="overwork-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
           <!--日付-->
           <td class="table-body"><%= attendance.attendance_date.month %>/<%= attendance.attendance_date.day %></td>
