@@ -71,6 +71,11 @@ class AttendancesController < ApplicationController
   def destroy
   end
   
+  #一ヶ月分の勤怠申請
+  def monthly_confirmation
+    
+  end
+  
   # 出勤・退社ボタン押下　show.html.erbの出社・退社押下時反応
   def attendance_update
     # 更新する勤怠データを取得

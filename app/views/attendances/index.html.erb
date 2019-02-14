@@ -129,10 +129,10 @@
           <td class="table-body">
           </td>
           <!-- 業務処理内容の表示  -->
-          <td class="table-body">
+          <td class="table-body"><%= attendance.task_memo %>
           </td>
           <!-- 指示者確認（印）の表示  -->
-          <td class="table-body">
+          <td class="table-body"><%= User.find(attendance.overwork_approver_id.to_i).name if attendance.overwork_approver_id %>
           </td>
         </tr>
       </div>
@@ -147,8 +147,11 @@
       </td>
       <td colspan="5" class="table-body"></td>
       <td class="table-body">所属長承認
+        <%= form_tag(monthly_confirmation_path, method: :patch) do %>
         <%= select :user, :name, @seniors, :prompt => "選択してください" %>
-        <%= link_to "申請", new_attendance_path, remote: true, :style =>"color:white;", class: "btn btn-primary btn-block btn-sm" %>
+        <%= hidden_field_tag :year_month, @first_day %>
+        <%= submit_tag("申請", class: "btn btn-primary btn-block btn-sm")%>
+        <% end %>
       </td>
     </tr>
   </tbody>

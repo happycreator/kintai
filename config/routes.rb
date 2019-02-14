@@ -10,9 +10,11 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
   resources :users
+  get  '/attendance_users',    to: 'users#attendance_users'
   resources :account_activations, only: [:edit]
   resources :attendances
-  get  '/attendance_users',    to: 'users#attendance_users'
+  #一ヶ月分の申請
+  patch  '/monthly_confirmation',    to: 'attendances#monthly_confirmation'
   resources :basic_information
   resources :working_places
   resources :attendance_logs
