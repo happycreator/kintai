@@ -2,18 +2,18 @@
   <div id="accordion" class="panel-group">
   <% @users.each do |user| %>
     <li>
-    <%= gravatar_for user, size: 50 %>
     <%= link_to user.name, user %>
-    <% if current_user.admin? && !current_user?(user) %>
+    </li>
+     <% if current_user.admin? && !current_user?(user) %>
       | <%= link_to "削除", user, method: :delete, data: { confirm: "本当に削除しますか？" }, :style=>"color:white;", class: "btn btn-sm btn-primary" %>
     <% end %>
-    </li>
+    
       <!--繰り返す-->
       <div class="panel">
         <div class="panel-heading">
           <h4 class="panel-title">
           <!--idとして一意に特定できるようにする-->
-            <a href="#<%= user.id %>" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion"><%= user.name %></a>
+            <a href="#<%= user.id %>" class="accordion-toggle collapsed btn btn-primary" data-toggle="collapse" data-parent="#accordion" style="color:white;">編集</a>
           </h4>
         </div>
         <!--idは一意に特定できるようにする-->

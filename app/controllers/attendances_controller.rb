@@ -73,7 +73,14 @@ class AttendancesController < ApplicationController
   
   #一ヶ月分の勤怠申請
   def monthly_confirmation
-    
+    @first_day = params[:year_month]
+    #datetimeに変換
+    @first_day = @first_day.to_datetime
+    @last_day = @first_day.end_of_month
+    #パラメーターでユーザーの名前を検索してidを入れる
+    _id = User.where(name: params[:user][:name]).first.id
+    #一ヶ月分の勤怠検索して上長IDとステータスの申請して保存する
+    Attendance.where('attendance_date >= ? and attendance_date <= ?', @first_day, @last_day).update_all(:monthly_confirmation_approver_id => _id, :monthly_confirmation_status => :pending)
   end
   
   # 出勤・退社ボタン押下　show.html.erbの出社・退社押下時反応
