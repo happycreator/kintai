@@ -174,6 +174,7 @@ class AttendancesController < ApplicationController
         if item["arriving_at"].blank? && item["leaving_at"].blank?
         
         else
+          #binding.pry
           attendance.update_attributes(item)
           flash[:success] = '勤怠時間を更新しました。'
         end
@@ -185,6 +186,6 @@ class AttendancesController < ApplicationController
   private
 
   def attendances_params
-    params.permit(attendances: [:arriving_at, :leaving_at])[:attendances]
+    params.permit(attendances: [:arriving_at, :leaving_at, :note, :overwork_approver_id])[:attendances]
   end
 end

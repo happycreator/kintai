@@ -32,7 +32,7 @@
           <!--退勤-->
           <td><%= tf.time_field :leaving_at, class: "form-control tf" %></td>
           <!--翌日のチェックボックス-->
-          <td><%= f.check_box :password %></td>
+          <td><%= check_box_tag :overday_check %></td>
           <!--在社時間の秒計算-->
           <td><%= working_hours(d.arriving_at,d.leaving_at) if d.arriving_at.present? && d.leaving_at.present? %></td>
           <!--備考の入力フォーム-->
