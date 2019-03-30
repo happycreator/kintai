@@ -24,6 +24,17 @@
     </div>  
   </thead>
 </table>
+<!--上長で（自分かどうか）&未承認だったら申請のお知らせの表示・未承認のものがあれば文字は赤色-->
+<% if current_user.is_senior %>
+<!-- 所属長承認リンクを押すとモーダルへ飛ぶ-->
+<%= link_to "【所属長承認のお知らせ】", monthly_confirmation_form_path, remote: true %>
+  <div id="monthly-confirmation-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+  <!-- 所属長承認の件数をカウントする-->
+  <%= @monthly_confirmation_count %>
+
+【勤怠変更申請のお知らせ】
+【残業申請のお知らせ】
+<% end %>
 
 <!--attendance_edit_pathに、userのidと今月の値を渡す-->
 <div class="actions">
@@ -72,68 +83,68 @@
   <%= f.hidden_field :user_id, :value => "#{@user.id}"%>
   <%= f.hidden_field :id, :value => "#{attendance.id}"%>
     <tr>
-      <!-- 残業申請ボタンを押すとモーダルへ飛ぶ-->
-      <td class="table-body"><%= link_to "残業申請", edit_attendance_path(attendance), remote: true, :style=>"color:white;", class: "btn btn-sm btn-primary" %>
-        <div id="overwork-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-          <!--日付-->
-          <td class="table-body"><%= attendance.attendance_date.month %>/<%= attendance.attendance_date.day %></td>
-          <!--曜日-->
-          <td class="table-body"><%= @youbi[attendance.attendance_date.wday] %></td>
-          <!-- 出社時間の表示  -->
-          <td class="table-body">
-            <%= attendance.arriving_at.hour if !attendance.arriving_at.nil? %>
-          </td>
-          <td class="table-body">
-            <%= attendance.arriving_at.min if !attendance.arriving_at.nil? %>
-          </td>
-          <td class="table-body">
-            <!-- 自身の勤怠で出社時間と退社時間が空なら表示  -->
-            <% if current_user == @user && attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
-            <%= f.hidden_field :update_type, :value => "arriving_at"%>
-            <%= f.submit "出社", class: "btn btn-primary btn-block" %>
-            <% end %>
-          </td>
-          <!-- 退社時間の表示  -->
-          <td class="table-body">
-            <%= attendance.leaving_at.hour if !attendance.leaving_at.nil? %>
-          </td>
-          <td class="table-body">
-            <%= attendance.leaving_at.min if !attendance.leaving_at.nil? %>
-          </td>
-          <td class="table-body">
-            <!-- 出社時間入力済みかつ退社時間が空なら表示  -->
-            <% if current_user == @user && !attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
-            <%= f.hidden_field :update_type, :value => "leaving_at"%>
-            <%= f.submit "退社", class: "btn btn-primary btn-block" %>
-            <% end %>
-          </td>
-          <!-- 在社時間の表示  -->
-          <td class="table-body">
-            <% if !attendance.arriving_at.nil? && !attendance.leaving_at.nil? %>
-            <%= f.hidden_field :update_type, :value => "arriving_at"%>
-            <%= f.hidden_field :update_type, :value => "leaving_at"%>
-            <%= working_hours(attendance.arriving_at,attendance.leaving_at) if attendance.arriving_at.present? && attendance.leaving_at.present? %>
-            <% end %>
-          </td>
-          <!-- 備考の表示  -->
-          <td class="table-body">
-            <%= attendance.note %>
-          </td>
-          <!-- 終了予定時間の表示(時)-->
-          <td class="table-body"><%= attendance.overtime.try(:hour) %>
-          </td>
-          <!-- 終了予定時間の表示(分) -->
-          <td class="table-body"><%= attendance.overtime.try(:min) %>
-          </td>
-          <!-- 時間外時間の表示 （ -->
-          <td class="table-body">
-          </td>
-          <!-- 業務処理内容の表示  -->
-          <td class="table-body"><%= attendance.task_memo %>
-          </td>
-          <!-- 指示者確認（印）の表示  -->
-          <td class="table-body"><%= User.find(attendance.overwork_approver_id.to_i).name if attendance.overwork_approver_id %>
-          </td>
+    <!-- 残業申請ボタンを押すとモーダルへ飛ぶ-->
+    <td class="table-body"><%= link_to "残業申請", edit_attendance_path(attendance), remote: true, :style=>"color:white;", class: "btn btn-sm btn-primary" %>
+      <div id="overwork-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <!--日付-->
+        <td class="table-body"><%= attendance.attendance_date.month %>/<%= attendance.attendance_date.day %></td>
+        <!--曜日-->
+        <td class="table-body"><%= @youbi[attendance.attendance_date.wday] %></td>
+        <!-- 出社時間の表示  -->
+        <td class="table-body">
+          <%= attendance.arriving_at.hour if !attendance.arriving_at.nil? %>
+        </td>
+        <td class="table-body">
+          <%= attendance.arriving_at.min if !attendance.arriving_at.nil? %>
+        </td>
+        <td class="table-body">
+        <!-- 自身の勤怠で出社時間と退社時間が空なら表示  -->
+        <% if current_user == @user && attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
+          <%= f.hidden_field :update_type, :value => "arriving_at"%>
+          <%= f.submit "出社", class: "btn btn-primary btn-block" %>
+        <% end %>
+        </td>
+        <!-- 退社時間の表示  -->
+        <td class="table-body">
+          <%= attendance.leaving_at.hour if !attendance.leaving_at.nil? %>
+        </td>
+        <td class="table-body">
+          <%= attendance.leaving_at.min if !attendance.leaving_at.nil? %>
+        </td>
+        <td class="table-body">
+          <!-- 出社時間入力済みかつ退社時間が空なら表示  -->
+          <% if current_user == @user && !attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
+          <%= f.hidden_field :update_type, :value => "leaving_at"%>
+          <%= f.submit "退社", class: "btn btn-primary btn-block" %>
+          <% end %>
+        </td>
+        <!-- 在社時間の表示  -->
+        <td class="table-body">
+          <% if !attendance.arriving_at.nil? && !attendance.leaving_at.nil? %>
+          <%= f.hidden_field :update_type, :value => "arriving_at"%>
+          <%= f.hidden_field :update_type, :value => "leaving_at"%>
+          <%= working_hours(attendance.arriving_at,attendance.leaving_at) if attendance.arriving_at.present? && attendance.leaving_at.present? %>
+          <% end %>
+        </td>
+        <!-- 備考の表示  -->
+        <td class="table-body">
+          <%= attendance.note %>
+        </td>
+        <!-- 終了予定時間の表示(時)-->
+        <td class="table-body"><%= attendance.overtime.try(:hour) %>
+        </td>
+        <!-- 終了予定時間の表示(分) -->
+        <td class="table-body"><%= attendance.overtime.try(:min) %>
+        </td>
+        <!-- 時間外時間の表示 （ -->
+        <td class="table-body">
+        </td>
+        <!-- 業務処理内容の表示  -->
+        <td class="table-body"><%= attendance.task_memo %>
+        </td>
+        <!-- 指示者確認（印）の表示  -->
+        <td class="table-body"><%= User.find(attendance.overwork_approver_id.to_i).name if attendance.overwork_approver_id %>
+        </td>
         </tr>
       </div>
     </td>

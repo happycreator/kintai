@@ -10,13 +10,25 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
   resources :users
+  
+  #CSVのインポート
+  post '/import_csv', to: 'users#import_csv'
+  #出勤社員一覧
   get  '/attendance_users',    to: 'users#attendance_users'
   resources :account_activations, only: [:edit]
   resources :attendances
+  
+  #上長画面一ヶ月分勤怠申請のお知らせフォーム
+  get  '/monthly_confirmation_form',    to: 'attendances#monthly_confirmation_form'
+  post  '/monthly_confirmation_form',    to: 'attendances#monthly_confirmation_form'
+   
   #一ヶ月分の申請
   patch  '/monthly_confirmation',    to: 'attendances#monthly_confirmation'
+  #基本情報の編集
   resources :basic_information
+  #拠点情報の修正
   resources :working_places
+  #勤怠ログ
   resources :attendance_logs
   
   # 出勤画面表示・編集

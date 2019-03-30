@@ -27,6 +27,9 @@ class AttendancesController < ApplicationController
     end
     # 表示期間の勤怠データを日付順にソートして取得 show.html.erb、 <% @attendances.each do |attendance| %>からの情報
     @attendances = @user.attendances.where('attendance_date >= ? and attendance_date <= ?', @first_day, @last_day).order("attendance_date ASC")
+    
+    # 上長画面で一ヶ月分勤怠申請のお知らせをカウントする
+    @monthly_confirmation_count = Attendance.monthly_confirmation(current_user)
   end
   
   def new
@@ -138,6 +141,9 @@ class AttendancesController < ApplicationController
     @attendances = @user.attendances.where('attendance_date >= ? and attendance_date <= ?', @first_day, @last_day).order("attendance_date ASC")
     end
   end
+  
+  def monthly_confirmation_form
+  end
 
   #編集ページ更新  
   def attendance_update_all
@@ -174,9 +180,14 @@ class AttendancesController < ApplicationController
         if item["arriving_at"].blank? && item["leaving_at"].blank?
         
         else
-          #binding.pry
-          attendance.update_attributes(item)
-          flash[:success] = '勤怠時間を更新しました。'
+          if params["attendances"][id]["change_confirmation_approver_id"]
+            item["change_confirmation_approver_id"] = User.where(name: params["attendances"][id]["change_confirmation_approver_id"]).first.id.to_i
+            attendance.update_attributes(item)
+            flash[:success] = '勤怠時間を更新しました。'
+          else
+            attendance.update_attributes(item)
+            flash[:success] = '勤怠時間を更新しました。'
+          end
         end
       end #eachの締め
     end
@@ -186,6 +197,7 @@ class AttendancesController < ApplicationController
   private
 
   def attendances_params
-    params.permit(attendances: [:arriving_at, :leaving_at, :note, :overwork_approver_id])[:attendances]
+    params.permit(attendances: [:arriving_at, :leaving_at, :note, :attendance_date, :overtime, :task_memo, :change_confirmation_approver_id,
+    :change_confirmation_status, :user_id, :overwork_status, :overwork_approver_id, :monthly_confirmation_approver_id, :monthly_confirmation_status])[:attendances]
   end
 end

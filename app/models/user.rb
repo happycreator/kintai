@@ -62,6 +62,19 @@ class User < ApplicationRecord
       .where('attendances.leaving_at is null')
   } 
   
+  #CSVインポートユーザー追加
+  def self.csv_attributes
+    ["name", "email", "role", "employee_number", "card_id", "base_attendance_time", "start_attendance_time","end_attendance_time", "admin","password"]
+  end
+  
+  def self.import_csv(file)
+    CSV.foreach(file.path, headers:true) do |row|
+      user = new
+      user.attributes = row.to_hash.slice(*csv_attributes)
+      user.save!
+    end
+  end
+  
  private
 
     # メールアドレスをすべて小文字にする
