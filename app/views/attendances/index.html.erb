@@ -158,7 +158,7 @@
       </td>
       <td colspan="5" class="table-body"></td>
       <td class="table-body">所属長承認
-        <%= form_tag(monthly_confirmation_path, method: :patch) do %>
+        <%= form_tag(monthly_confirmation_form_path, method: :patch) do %>
         <%= select :user, :name, @seniors, :prompt => "選択してください" %>
         <%= hidden_field_tag :year_month, @first_day %>
         <%= submit_tag("申請", class: "btn btn-primary btn-block btn-sm")%>

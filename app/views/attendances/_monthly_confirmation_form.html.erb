@@ -2,7 +2,15 @@
   <div class="modal-content">
     <h1>所属長承認のお知らせ</h1>
     <div class="monthly_confirmation_form">
-      <%= form_for(@attendance, remote: true) do |f| %>
+      
+    <%= @attendances.count %>
+    <% @pending_users.each do |user_name, attendances| %>
+    <%= user_name %>
+    <%= attendances %>
+    <% end %>
+    
+      <% if false %>
+      <%= form_tag(@attendances, remote: true) do |f| %>
         <table class = "table-bordered table-striped table-condensed">
           <thead>
             <thead>
@@ -28,6 +36,7 @@
           </tbody>
         </table>
         <%= f.submit "変更を送信する", class: "btn btn-primary btn-sm" %>
+      <% end %>
       <% end %>
     </div>
   </div>

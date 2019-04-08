@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   post  '/monthly_confirmation_form',    to: 'attendances#monthly_confirmation_form'
    
   #一ヶ月分の申請
-  patch  '/monthly_confirmation',    to: 'attendances#monthly_confirmation'
+  patch  '/monthly_confirmation_form',    to: 'attendances#monthly_confirmation_form'
   #基本情報の編集
   resources :basic_information
   #拠点情報の修正

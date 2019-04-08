@@ -29,7 +29,7 @@ class AttendancesController < ApplicationController
     @attendances = @user.attendances.where('attendance_date >= ? and attendance_date <= ?', @first_day, @last_day).order("attendance_date ASC")
     
     # 上長画面で一ヶ月分勤怠申請のお知らせをカウントする
-    @monthly_confirmation_count = Attendance.monthly_confirmation(current_user)
+    @monthly_confirmation_count = Attendance.monthly_confirmation_form(current_user)
   end
   
   def new
@@ -75,7 +75,7 @@ class AttendancesController < ApplicationController
   end
   
   #一ヶ月分の勤怠申請
-  def monthly_confirmation
+  def monthly_confirmation_form
     @first_day = params[:year_month]
     #datetimeに変換
     @first_day = @first_day.to_datetime
@@ -83,7 +83,7 @@ class AttendancesController < ApplicationController
     #パラメーターでユーザーの名前を検索してidを入れる
     _id = User.where(name: params[:user][:name]).first.id
     #一ヶ月分の勤怠検索して上長IDとステータスの申請して保存する
-    Attendance.where('attendance_date >= ? and attendance_date <= ?', @first_day, @last_day).update_all(:monthly_confirmation_approver_id => _id, :monthly_confirmation_status => :pending)
+    Attendance.where('attendance_date >= ? and attendance_date <= ?', @first_day-1.minute, @last_day).update_all(:monthly_confirmation_approver_id => _id, :monthly_confirmation_status => :pending)
   end
   
   # 出勤・退社ボタン押下　show.html.erbの出社・退社押下時反応
@@ -143,6 +143,20 @@ class AttendancesController < ApplicationController
   end
   
   def monthly_confirmation_form
+    #未承認かつidがcurrent_user
+    @attendances = Attendance.where(monthly_confirmation_status: :pending, monthly_confirmation_approver_id: current_user.id)
+    #ユーザー（user_id)ごとに勤怠のオブジェクトを分ける
+    tmp_pending_users = @attendances.group_by(&:user_id)
+    #未承認のユーザーの名前と、何月分の一ヶ月勤怠申請なのか
+    @pending_users = {}
+    tmp_pending_users.each do |user_id, attendances|
+      year_month_arr = []
+      attendances.each do |attendance|
+        year_month_arr << attendance.attendance_date.year.to_s + attendance.attendance_date.month.to_s
+      end
+      year_month_arr.uniq
+      @pending_users.store(User.find(user_id).name, year_month_arr.uniq)
+    end
   end
 
   #編集ページ更新  
