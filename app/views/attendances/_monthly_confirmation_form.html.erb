@@ -1,10 +1,9 @@
 <div class="modal-dialog">
   <div class="modal-content">
-    <h1>所属長承認のお知らせ</h1>
     <div class="monthly_confirmation_form">
-      
     <%= @attendances.count %>
     <% @pending_users.each do |user_name, attendances| %>
+    <h1><%= user_name %>からの１ヶ月分勤怠申請</h1>
     <%= user_name %>
     <%= attendances %>
     <% end %>

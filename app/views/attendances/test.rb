@@ -12,5 +12,3 @@ pending_users.each do |user_id, attendances|
   year_month_arr.uniq
   pending_users.store(User.find(user_id).name, year_month_arr.uniq)
 end
-
-puts pending_users
