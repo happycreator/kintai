@@ -1,0 +1,146 @@
+<% provide(:title, "勤怠システム") %>
+<table class="table table-bordered table-striped table-condensed">
+  <thead>
+    <div class = "header">
+      <tr>
+        <th colspan="2" class="table-header" width="250">
+        <%= @first_day.strftime("%Y年%m月") %>　時間管理表　
+        </th>
+        <th colspan="2" class="table-header" width="250">
+        </th>
+        <th class="table-header">指定勤務開始時間　</th>
+        <th colspan="2" class="table-header">基本時間 </th>
+        <th class="table-header">初日  <%= @first_day.strftime("%m/%d") %></th>
+        <th class="table-header">締め　<%= @last_day.strftime("%m/%d") %></th>
+      </tr>
+      <tr>
+        <th class="table-header">所属 <%= @user.role %></th>
+        <th class="table-header">社員番号　<%= @user.employee_number %></th>
+        <th class="table-header">氏名　<%= @user.name %></th>
+        <th class="table-header">カードID</th>
+        <th class="table-header"></th>
+        <th colspan="2" class="table-header">出勤日数　日</th>
+      </tr>
+    </div>
+  </thead>
+</table>
+
+<table class="table table-bordered table-striped table-condensed">
+  <thead>
+    <tr>
+      <th rowspan="3" class="table-header" width="90">残業申請</th>
+      <th rowspan="3" class="table-header" width="50">日付</th>
+      <th rowspan="3" class="table-header" width="50">曜日</th>
+      <th colspan="8" class="table-header" width="180">実績</th>
+      <th colspan="10" class="table-header" width="180">所定外勤務</th>
+    </tr>
+    
+    <tr>
+      <th colspan="3" class="table-header" width="180">出社</th>
+      <th colspan="3" class="table-header" width="180">退社</th>
+      <th rowspan="2" class="table-header" width="100">在社時間</th>
+      <th rowspan="2" class="table-header" width="70">備考</th>
+      <th colspan="2" class="table-header" width="120">終了予定時間</th>
+      <th rowspan="2" class="table-header" width="100">時間外時間</th>
+      <th rowspan="2" class="table-header" width="100">業務処理内容</th>
+      <th rowspan="2" class="table-header" width="130">指示者確認（印）</th>
+    </tr>
+    
+    <tr>   
+     <th class="table-header" width="50">時</th>
+     <th class="table-header" width="50">分</th>
+     <th class="table-header" width="50">  </th>
+     <th class="table-header" width="50">時</th>
+     <th class="table-header" width="50">分</th>
+     <th class="table-header" width="50">  </th>
+     <th class="table-header" width="50">時</th>
+     <th class="table-header" width="50">分</th>
+    </tr>
+  </thead>
+  <tbody>
+  <!-- attendance_controller.rbの@attendancesの中身を見にいく-->
+  <% total_present_time = 0 %>
+  <% @attendances.each do |attendance| %>
+  <%= form_for(attendance, url: attendance_update_path ) do |f| %>
+  <%= f.hidden_field :user_id, :value => "#{@user.id}"%>
+  <%= f.hidden_field :id, :value => "#{attendance.id}"%>
+    <tr>
+    <!-- 残業申請ボタンを押すとモーダルへ飛ぶ-->
+    <td class="table-body">
+        <!--日付-->
+        <td class="table-body"><%= attendance.attendance_date.month %>/<%= attendance.attendance_date.day %></td>
+        <!--曜日-->
+        <td class="table-body"><%= @youbi[attendance.attendance_date.wday] %></td>
+        <!-- 出社時間の表示  -->
+        <td class="table-body">
+          <%= attendance.arriving_at.hour if !attendance.arriving_at.nil? %>
+        </td>
+        <td class="table-body">
+          <%= attendance.arriving_at.min if !attendance.arriving_at.nil? %>
+        </td>
+        <td class="table-body">
+        <!-- 自身の勤怠で出社時間と退社時間が空なら表示  -->
+        <% if current_user == @user && attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
+          <%= f.hidden_field :update_type, :value => "arriving_at"%>
+          <%= f.submit "出社", class: "btn btn-primary btn-block" %>
+        <% end %>
+        </td>
+        <!-- 退社時間の表示  -->
+        <td class="table-body">
+          <%= attendance.leaving_at.hour if !attendance.leaving_at.nil? %>
+        </td>
+        <td class="table-body">
+          <%= attendance.leaving_at.min if !attendance.leaving_at.nil? %>
+        </td>
+        <td class="table-body">
+          <!-- 出社時間入力済みかつ退社時間が空なら表示  -->
+          <% if current_user == @user && !attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
+          <%= f.hidden_field :update_type, :value => "leaving_at"%>
+          <%= f.submit "退社", class: "btn btn-primary btn-block" %>
+          <% end %>
+        </td>
+        <!-- 在社時間の表示  -->
+        <td class="table-body">
+          <% if !attendance.arriving_at.nil? && !attendance.leaving_at.nil? %>
+          <%= f.hidden_field :update_type, :value => "arriving_at"%>
+          <%= f.hidden_field :update_type, :value => "leaving_at"%>
+          <%= working_hours(attendance.arriving_at,attendance.leaving_at) if attendance.arriving_at.present? && attendance.leaving_at.present? %>
+          <% end %>
+        </td>
+        <!-- 備考の表示  -->
+        <td class="table-body">
+          <%= attendance.note %>
+        </td>
+        <!-- 終了予定時間の表示(時)-->
+        <td class="table-body"><%= attendance.overtime.try(:hour) %>
+        </td>
+        <!-- 終了予定時間の表示(分) -->
+        <td class="table-body"><%= attendance.overtime.try(:min) %>
+        </td>
+        <!-- 時間外時間の表示 （ -->
+        <td class="table-body">
+        </td>
+        <!-- 業務処理内容の表示  -->
+        <td class="table-body"><%= attendance.task_memo %>
+        </td>
+        <!-- 指示者確認（印）の表示  -->
+        <td class="table-body"><%= User.find(attendance.overwork_approver_id.to_i).name if attendance.overwork_approver_id %>
+        </td>
+        </tr>
+      </div>
+    </td>
+  <% end %>
+  <% end %>
+    <tr>
+      <td colspan="9" class="table-body"></td>
+      <!-- 合計在社時間の表示 -->
+      <td class="table-body">
+        <%= format("%.2f", total_present_time) %>
+      </td>
+      <td colspan="5" class="table-body"></td>
+      <td class="table-body">所属長承認<br>
+        <%= @senior.name %>へ申請中
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,62 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="change_confirmation_form">
+      <table class="table table-bordered table-striped table-condensed">
+        <thead>
+          <tr>
+            <th rowspan="3" class="table-header" width="50">日付</th>
+            <th rowspan="3" class="table-header" width="50">曜日</th>
+            <th colspan="4" class="table-header" width="180">変更前</th>
+            <th colspan="4" class="table-header" width="180">変更後</th>
+            <th rowspan="3" class="table-header" width="70">備考</th>
+            <th rowspan="3" class="table-header" width="130">指示者確認（印）</th>
+            <th rowspan="3" class="table-header" width="70">変更</th>
+            <th rowspan="3" class="table-header" width="130">勤怠を確認する</th>
+          </tr>
+            <% @pending_users.each do |user, attendances| %>
+            <%= user.name %>
+            <% attendances.each do |attendance| %>
+            <%= attendance.attendance_date %>
+            <% end %>
+            <% end %>
+          <tr>
+            <th colspan="2" class="table-header" width="180">出社</th>
+            <th colspan="2" class="table-header" width="180">退社</th>
+            <th colspan="2" class="table-header" width="180">出社</th>
+            <th colspan="2" class="table-header" width="180">退社</th>
+          </tr>
+          <tr>
+              <th class="table-header" width="50">時</th>
+              <th class="table-header" width="50">分</th>
+              <th class="table-header" width="50">時</th>
+              <th class="table-header" width="50">分</th>
+              <th class="table-header" width="50">時</th>
+              <th class="table-header" width="50">分</th>
+              <th class="table-header" width="50">時</th>
+              <th class="table-header" width="50">分</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <!--日付-->
+              <td class="table-body"></td>
+              <!--曜日-->
+              <td class="table-body"></td>
+              <!-- 出社時間の表示  -->
+              <td class="table-body"></td>
+              <td class="table-body"></td>
+              <td class="table-body"></td>
+              <!-- 退社時間の表示  -->
+              <td class="table-body"></td>
+              <td class="table-body"></td>
+              <td class="table-body"></td>
+              <!-- 備考の表示  -->
+              <td class="table-body"></td>
+              <!-- 指示者確認（印）の表示  -->
+              <td class="table-body"></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+　 </div>
+</div>

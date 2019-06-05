@@ -21,9 +21,18 @@ Rails.application.routes.draw do
   #上長画面一ヶ月分勤怠申請のお知らせフォーム
   get  '/monthly_confirmation_form',    to: 'attendances#monthly_confirmation_form'
   post  '/monthly_confirmation_form',    to: 'attendances#monthly_confirmation_form'
-   
+  post  '/monthly_confirmation_status_update',    to: 'attendances#monthly_confirmation_status_update'
+
+  #上長画面勤怠変更申請のお知らせフォーム
+  get  '/change_confirmation_form',    to: 'attendances#change_confirmation_form'
+  post  '/change_confirmation_form',    to: 'attendances#change_confirmation_form'
+
   #一ヶ月分の申請
   patch  '/monthly_confirmation',    to: 'attendances#monthly_confirmation'
+  
+  #上長モーダルより、申請者の一ヶ月勤怠画面確認
+  get  '/monthly_attendance_show',    to: 'attendances#monthly_attendance_show'
+
   #基本情報の編集
   resources :basic_information
   #拠点情報の修正

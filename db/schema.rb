@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190214113906) do
+ActiveRecord::Schema.define(version: 20190530124354) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "attendance_logs", force: :cascade do |t|
     t.date     "attendance_date"
@@ -40,7 +43,9 @@ ActiveRecord::Schema.define(version: 20190214113906) do
     t.datetime "updated_at",                       null: false
     t.integer  "monthly_confirmation_approver_id"
     t.integer  "monthly_confirmation_status"
-    t.index ["user_id"], name: "index_attendances_on_user_id"
+    t.datetime "before_change_arriving_at"
+    t.datetime "before_change_leaving_at"
+    t.index ["user_id"], name: "index_attendances_on_user_id", using: :btree
   end
 
   create_table "user_working_places", force: :cascade do |t|
@@ -48,9 +53,9 @@ ActiveRecord::Schema.define(version: 20190214113906) do
     t.integer  "working_place_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
-    t.index ["user_id", "working_place_id"], name: "index_user_working_places_on_user_id_and_working_place_id", unique: true
-    t.index ["user_id"], name: "index_user_working_places_on_user_id"
-    t.index ["working_place_id"], name: "index_user_working_places_on_working_place_id"
+    t.index ["user_id", "working_place_id"], name: "index_user_working_places_on_user_id_and_working_place_id", unique: true, using: :btree
+    t.index ["user_id"], name: "index_user_working_places_on_user_id", using: :btree
+    t.index ["working_place_id"], name: "index_user_working_places_on_working_place_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -71,7 +76,7 @@ ActiveRecord::Schema.define(version: 20190214113906) do
     t.datetime "end_attendance_time"
     t.string   "card_id"
     t.boolean  "is_senior"
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 
   create_table "working_places", force: :cascade do |t|

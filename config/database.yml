@@ -1,25 +1,17 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
+  encoding: unicode
   pool: 5
-  timeout: 5000
-
+  # 以下、3行追加
+  username: root # 設定したPostgreSQL Accountと同一のもの
+  password: password # 設定したPostgreSQL Accountと同一のもの
+  host: localhost
 development:
   <<: *default
-  database: db/development.sqlite3
-
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
+  database: kintai_dev # appnameのところは、rails new時のappnameになっているはずです。
 test:
   <<: *default
-  database: db/test.sqlite3
-
+  database: kintai_test # appnameのところは、rails new時のappnameになっているはずです。
 production:
   <<: *default
-  database: db/production.sqlite3
+  database: kintai_prod # appnameのところは、rails new時のappnameになっているはずです。
