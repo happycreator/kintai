@@ -28,14 +28,17 @@
 <% if current_user.is_senior %>
 <!-- 所属長承認リンクを押すとモーダルへ飛ぶ-->
 <%= link_to "【所属長承認のお知らせ】", monthly_confirmation_form_path, remote: true %>
-  <div id="monthly-confirmation-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="monthly-confirmation-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
   <!-- 所属長承認の件数をカウントする-->
-  <%= @monthly_confirmation_count %>
+<%= @monthly_confirmation_count %>件
 
 <%= link_to "【勤怠変更申請のお知らせ】", change_confirmation_form_path, remote: true %>
 <div id="change-confirmation-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <%= @change_confirmation_count %>
-【残業申請のお知らせ】
+
+<%= link_to "【残業申請のお知らせ】", overwork_confirmation_form_path, remote: true %>
+<div id="overwork-confirmation-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<%= @overwork_confirmation_count %> 
 <% end %>
 
 <!--attendance_edit_pathに、userのidと今月の値を渡す-->

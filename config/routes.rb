@@ -26,6 +26,12 @@ Rails.application.routes.draw do
   #上長画面勤怠変更申請のお知らせフォーム
   get  '/change_confirmation_form',    to: 'attendances#change_confirmation_form'
   post  '/change_confirmation_form',    to: 'attendances#change_confirmation_form'
+  post  '/change_confirmation_status_update',    to: 'attendances#change_confirmation_status_update'
+
+  #上長面残業申請のお知らせフォーム
+  get  '/overwork_confirmation_form',    to: 'attendances#overwork_confirmation_form'
+  post  '/overwork_confirmation_form',    to: 'attendances#overwork_confirmation_form'
+  post  '/overwork_confirmation_status_update',    to: 'attendances#overwork_confirmation_status_update'
 
   #一ヶ月分の申請
   patch  '/monthly_confirmation',    to: 'attendances#monthly_confirmation'
@@ -37,8 +43,10 @@ Rails.application.routes.draw do
   resources :basic_information
   #拠点情報の修正
   resources :working_places
+
   #勤怠ログ
-  resources :attendance_logs
+  get  '/attendance_logs',    to: 'attendances#attendance_logs'
+  post  '/attendance_logs',    to: 'attendances#attendance_logs'
   
   # 出勤画面表示・編集
   get  '/attendance_update', to: 'attendances#attendance_update'

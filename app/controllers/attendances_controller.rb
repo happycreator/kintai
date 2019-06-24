@@ -33,6 +33,9 @@ class AttendancesController < ApplicationController
 
     # 上長画面で勤怠変更申請のお知らせをカウントする
     @change_confirmation_count = Attendance.change_confirmation(current_user)
+
+    # 上長画面で残業申請のお知らせをカウントする
+    @overwork_confirmation_count = Attendance.overwork_confirmation(current_user)
   end
 
   def new
@@ -67,6 +70,7 @@ class AttendancesController < ApplicationController
     @attendance.user_id = current_user.id
     #指示者確認・パラメーターでユーザーの名前を検索してidを入れる
     @attendance.overwork_approver_id = User.where(name: params[:user][:name]).first.id
+    @attendance.overwork_status = :pending
     @attendance.task_memo = params[:attendance][:task_memo]
     if @attendance.save
       redirect_to attendances_path, notice: '残業申請を送付しました。'
@@ -180,6 +184,31 @@ class AttendancesController < ApplicationController
       #storeメソッドでハッシュにキーkeyと値valのペアを追加
       @pending_users.store(User.find(user_id), attendance_arr)
     end
+    # 曜日表示用に使用する
+    @youbi = %w[日 月 火 水 木 金 土]
+  end
+
+  def overwork_confirmation_form
+    @attendances = Attendance.where(overwork_status: :pending, overwork_approver_id: current_user.id)
+    #ユーザー（user_id)ごとに勤怠のオブジェクトを分ける
+    tmp_pending_users = @attendances.group_by(&:user_id)
+    @pending_users = {}
+    tmp_pending_users.each do |user_id, attendances|
+      attendance_arr = []
+      attendances.each do |attendance|
+        attendance_arr << attendance
+      end
+      #storeメソッドでハッシュにキーkeyと値valのペアを追加
+      @pending_users.store(User.find(user_id), attendance_arr)
+    end
+    # 曜日表示用に使用する
+    @youbi = %w[日 月 火 水 木 金 土]
+  end
+
+  def change_confirmation_status_update
+  end
+
+  def overwork_confirmation_status_update
   end
 
   #first_dayとlast_dayをアウトプットするメソッド
@@ -216,6 +245,9 @@ class AttendancesController < ApplicationController
     @youbi = %w[日 月 火 水 木 金 土]
     #指示者確認（印）上長の選択
     @senior = current_user
+  end
+
+  def attendance_logs
   end
 
   #編集ページ更新

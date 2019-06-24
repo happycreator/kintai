@@ -1,7 +1,10 @@
 <div class="modal-dialog">
   <div class="modal-content">
+  <% @pending_users.each do |user, attendances| %>
+    <h2>【<%= user.name %>からの勤怠変更申請】</h2>
     <div class="change_confirmation_form">
       <table class="table table-bordered table-striped table-condensed">
+      <%= form_tag(change_confirmation_status_update_path, method: :post) do %>
         <thead>
           <tr>
             <th rowspan="3" class="table-header" width="50">日付</th>
@@ -13,12 +16,6 @@
             <th rowspan="3" class="table-header" width="70">変更</th>
             <th rowspan="3" class="table-header" width="130">勤怠を確認する</th>
           </tr>
-            <% @pending_users.each do |user, attendances| %>
-            <%= user.name %>
-            <% attendances.each do |attendance| %>
-            <%= attendance.attendance_date %>
-            <% end %>
-            <% end %>
           <tr>
             <th colspan="2" class="table-header" width="180">出社</th>
             <th colspan="2" class="table-header" width="180">退社</th>
@@ -37,26 +34,39 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-              <!--日付-->
-              <td class="table-body"></td>
-              <!--曜日-->
-              <td class="table-body"></td>
-              <!-- 出社時間の表示  -->
-              <td class="table-body"></td>
-              <td class="table-body"></td>
-              <td class="table-body"></td>
-              <!-- 退社時間の表示  -->
-              <td class="table-body"></td>
-              <td class="table-body"></td>
-              <td class="table-body"></td>
-              <!-- 備考の表示  -->
-              <td class="table-body"></td>
-              <!-- 指示者確認（印）の表示  -->
-              <td class="table-body"></td>
-            </tr>
-        </tbody>
-      </table>
+          <% attendances.each do |attendance| %>
+            <tr>
+                <!--日付-->
+                <td class="table-body"><%= attendance.attendance_date %></td>
+                <!--曜日-->
+                <td class="table-body"><%= @youbi[attendance.attendance_date.wday] %></td>
+                <!-- 出社時間の表示  -->
+                <td class="table-body"><%= attendance.before_change_arriving_at.try(:hour) %></td>
+                <td class="table-body"><%= attendance.before_change_arriving_at.try(:min) %></td>
+                <!-- 退社時間の表示  -->
+                <td class="table-body"><%= attendance.before_change_leaving_at.try(:hour) %></td>
+                <td class="table-body"><%= attendance.before_change_leaving_at.try(:min) %></td>
+                <!-- 出社時間の表示  -->
+                <td class="table-body"><%= attendance.arriving_at.try(:hour) %></td>
+                <td class="table-body"><%= attendance.arriving_at.try(:min) %></td>
+                <!-- 退社時間の表示  -->
+                <td class="table-body"><%= attendance.leaving_at.try(:hour) %></td>
+                <td class="table-body"><%= attendance.leaving_at.try(:min) %></td>
+                <!-- 備考の表示  -->
+                <td class="table-body"><%= attendance.note %></td>
+                <!-- 指示者確認（印）の表示  -->
+                <td class="table-body"><%= select_tag 'attendance[change_confirmation_status]', options_for_select([["なし", "nothing"], ["申請中", "pending"],["承認", "approval"], ["否認", "denial"]]) %></td>
+                <!-- 変更の表示  -->
+                <td class="table-body"><%= check_box_tag :change_confirmation_checked %></td>
+                <!-- 勤怠を確認するの表示  -->
+                <td class="table-body"><%= link_to "確認", monthly_attendance_show_path(params: { user_name: user.name, year_month: "#{attendance.attendance_date.year}" + "#{attendance.attendance_date.month}"}), :style=>"color:white;", class: "btn btn-sm btn-primary" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <%= submit_tag "変更を送信する", class: "btn btn-primary btn-sm" %>
+      <% end %>
     </div>
-　 </div>
+  </div>
+  <% end %>
 </div>
