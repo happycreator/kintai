@@ -3,23 +3,19 @@
   <thead>
     <div class = "header">
       <tr>
-        <th colspan="2" class="table-header" width="250">
-        <%= @first_day.strftime("%Y年%m月") %>　時間管理表　
-        </th>
-        <th colspan="2" class="table-header" width="250">
-        </th>
-        <th class="table-header">指定勤務開始時間　</th>
-        <th colspan="2" class="table-header">基本時間 </th>
+        <th colspan="2" class="table-header" width="250"><%= @first_day.strftime("%Y年%m月") %>　時間管理表　</th>
+        <th class="table-header" width="250">指定勤務開始時間　<%= time_format(@user.start_attendance_time) %></th>
+        <th colspan="2" class="table-header">基本時間　<%= time_format(@user.base_attendance_time) %> </th>
         <th class="table-header">初日  <%= @first_day.strftime("%m/%d") %></th>
         <th class="table-header">締め　<%= @last_day.strftime("%m/%d") %></th>
       </tr>
       <tr>
         <th class="table-header">所属 <%= @user.role %></th>
-        <th class="table-header">社員番号　<%= @user.employee_number %></th>
+        <th class="table-header">社員番号 <%= @user.employee_number %></th>
         <th class="table-header">氏名　<%= @user.name %></th>
         <th class="table-header">カードID</th>
-        <th class="table-header"></th>
-        <th colspan="2" class="table-header">出勤日数　日</th>
+        <th class="table-header"><%= @user.card_id %></th>
+        <th colspan="2" class="table-header">出勤日数　<%= attendance_count %>日</th>
       </tr>
     </div>
   </thead>

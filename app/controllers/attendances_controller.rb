@@ -53,7 +53,7 @@ class AttendancesController < ApplicationController
     @youbi = %w[日 月 火 水 木 金 土]
   end
 
-  #残業申請
+  #残業申請モーダルフォーム
   def update
     @attendance = Attendance.find(params[:id])
 
@@ -105,7 +105,7 @@ class AttendancesController < ApplicationController
     redirect_to attendances_path
   end
 
-
+  #勤怠変更ページの表示
   def attendance_edit
     @user = User.find(params[:id])
     #指示者確認（印）上長の選択
@@ -138,7 +138,59 @@ class AttendancesController < ApplicationController
     end
   end
 
-    #一ヶ月分の勤怠申請
+    #勤怠変更ページ更新
+    def attendance_update_all
+      @user = User.find_by(id: params[:id])
+      error_count = 0
+      message = ""
+  
+      attendances_params.each do |id, item|
+        attendance = Attendance.find(id)
+  
+        #出社時間と退社時間の両方の存在を確認
+        if item["arriving_at"].blank? && item["leaving_at"].blank?
+          message = '一部編集が無効となった項目があります。'
+  
+        # 当日以降の編集はadminユーザのみ
+        elsif attendance.attendance_date > Date.current && !current_user.admin?
+          message = '明日以降の勤怠編集は出来ません。'
+          error_count += 1
+  
+        #出社時間 > 退社時間ではないか
+        elsif item["arriving_at"].to_s > item["leaving_at"].to_s
+          message = '出社時間より退社時間が早い項目がありました'
+          error_count += 1
+        end
+      end #eachの締め
+  
+      if error_count > 0
+        flash[:warning] = message
+      else
+        attendances_params.each do |id, item|
+          attendance = Attendance.find(id)
+  
+          # 当日以降の編集はadminユーザのみ
+          if item["arriving_at"].blank? && item["leaving_at"].blank?
+  
+          else 
+            if params["attendances"][id]["change_confirmation_approver_id"]
+              item["before_change_arriving_at"] = attendance.arriving_at
+              item["before_change_leaving_at"] = attendance.leaving_at
+              item["change_confirmation_approver_id"] = User.where(name: params["attendances"][id]["change_confirmation_approver_id"]).first.id.to_i
+              item["change_confirmation_status"] = :pending
+              attendance.update_attributes(item)
+              flash[:success] = '勤怠時間を更新しました。'
+            else
+              attendance.update_attributes(item)
+              flash[:success] = '勤怠時間を更新しました。'
+            end
+          end
+        end #eachの締め
+      end
+      redirect_to attendances_url(@user, params:{ id: @user.id, first_day: params[:first_day]})
+    end
+
+  #ユーザーの一ヶ月分の勤怠申請
   def monthly_confirmation
     @first_day = params[:year_month]
     #datetimeに変換
@@ -150,7 +202,7 @@ class AttendancesController < ApplicationController
     Attendance.where('attendance_date >= ? and attendance_date <= ?', @first_day-1.minute, @last_day-9.hour).update_all(:monthly_confirmation_approver_id => _id, :monthly_confirmation_status => :pending)
   end
 
-  #上長承認モーダル画面・ユーザーからの1ヶ月勤怠申請を、上長モーダル画面へ
+  #上長モーダル画面・ユーザーからの1ヶ月勤怠申請を表示
   def monthly_confirmation_form
     #未承認かつidが上長current_user
     @attendances = Attendance.where(monthly_confirmation_status: :pending, monthly_confirmation_approver_id: current_user.id)
@@ -170,6 +222,43 @@ class AttendancesController < ApplicationController
     end
   end
 
+  #first_dayとlast_dayをアウトプットするメソッド
+  def first_day_last_day_output(year_month)
+    year = year_month.chop
+    month = year_month.scan(/.{1,4}/).last
+    month = "%02d" % (month.to_i)
+    #datetimeに変換
+    @first_day = (year + month + "01").to_datetime
+    @last_day = @first_day.end_of_month
+    #多値返却
+    return @first_day, @last_day
+  end
+
+  #上長がモーダル画面でユーザーからの一ヶ月勤怠のステータス変更を保存
+  def monthly_confirmation_status_update
+    #多値返却
+    @first_day, @last_day = first_day_last_day_output(params[:year_month])
+    #ユーザーごとの申請
+    @user = User.where(name: params[:user_name]).first
+    #どのユーザの？一ヶ月の勤怠で、どの上長（id）が承認したのか
+    @user.attendances.where('attendance_date >= ? and attendance_date <= ?', @first_day-1.minute, @last_day-9.hour).update_all(:monthly_confirmation_approver_id => current_user.id, :monthly_confirmation_status => params[:attendance][:monthly_confirmation_status])
+  end
+
+  #上長画面モーダルより、申請者の該当月の勤怠画面を表示
+  def monthly_attendance_show
+    #多値返却
+    @first_day, @last_day = first_day_last_day_output(params[:year_month])
+    #ユーザーごとの申請
+    @user = User.where(name: params[:user_name]).first
+    # 表示期間の勤怠データを日付順にソートして取得 view<% @attendances.each do |attendance| %>からの情報
+    @attendances = @user.attendances.where('attendance_date >= ? and attendance_date <= ?', @first_day-1.minute, @last_day-9.hour).order("attendance_date ASC")
+    # 曜日表示用に使用する
+    @youbi = %w[日 月 火 水 木 金 土]
+    #指示者確認（印）上長の選択
+    @senior = current_user
+  end
+
+  #上長画面モーダルより、ユーザーの勤怠変更申請勤を表示
   def change_confirmation_form
     #未承認かつidが上長current_userの勤怠
     @attendances = Attendance.where(change_confirmation_status: :pending, change_confirmation_approver_id: current_user.id)
@@ -186,6 +275,20 @@ class AttendancesController < ApplicationController
     end
     # 曜日表示用に使用する
     @youbi = %w[日 月 火 水 木 金 土]
+  end
+
+  #上長画面モーダルより、ユーザーの勤怠変更申請勤を保存
+  def change_confirmation_status_update
+    @user = User.where(name: params[:user_name]).first
+    params[:attendances].each do |d|
+      attendace = Attendace.where(attendance_date: d[:attendance_date], user_id: @user.id).first
+      attendace.change_confirmation_status = d[:change_confirmation_status]
+      #チェックボックスはifで分岐だけでデータベースには入れない
+      if params[:change_confirmation_checked]
+        attendance.attendance_date = @attendance.attendance_date
+        attendace.save
+      end
+    end
   end
 
   def overwork_confirmation_form
@@ -205,101 +308,23 @@ class AttendancesController < ApplicationController
     @youbi = %w[日 月 火 水 木 金 土]
   end
 
-  def change_confirmation_status_update
-  end
-
   def overwork_confirmation_status_update
   end
 
-  #first_dayとlast_dayをアウトプットするメソッド
-  def first_day_last_day_output(year_month)
-    year = year_month.chop
-    month = year_month.scan(/.{1,4}/).last
-    month = "%02d" % (month.to_i)
-    #datetimeに変換
-    @first_day = (year + month + "01").to_datetime
-    @last_day = @first_day.end_of_month
-    #多値返却
-    return @first_day, @last_day
-  end
-
-  #上長がモーダル画面でユーザーからの一ヶ月勤怠のステータス変更
-  def monthly_confirmation_status_update
-    #多値返却
-    @first_day, @last_day = first_day_last_day_output(params[:year_month])
-    #ユーザーごとの申請
-    @user = User.where(name: params[:user_name]).first
-    #どのユーザの？一ヶ月の勤怠で、どの上長（id）が承認したのか
-    @user.attendances.where('attendance_date >= ? and attendance_date <= ?', @first_day-1.minute, @last_day-9.hour).update_all(:monthly_confirmation_approver_id => current_user.id, :monthly_confirmation_status => params[:attendance][:monthly_confirmation_status])
-  end
-
-  #上長モーダルより、申請者の一ヶ月勤怠画面確認
-  def monthly_attendance_show
-    #多値返却
-    @first_day, @last_day = first_day_last_day_output(params[:year_month])
-    #ユーザーごとの申請
-    @user = User.where(name: params[:user_name]).first
-    # 表示期間の勤怠データを日付順にソートして取得 view<% @attendances.each do |attendance| %>からの情報
-    @attendances = @user.attendances.where('attendance_date >= ? and attendance_date <= ?', @first_day-1.minute, @last_day-9.hour).order("attendance_date ASC")
-    # 曜日表示用に使用する
-    @youbi = %w[日 月 火 水 木 金 土]
-    #指示者確認（印）上長の選択
-    @senior = current_user
-  end
-
   def attendance_logs
-  end
-
-  #編集ページ更新
-  def attendance_update_all
-    @user = User.find_by(id: params[:id])
-    error_count = 0
-    message = ""
-
-    attendances_params.each do |id, item|
-      attendance = Attendance.find(id)
-
-      #出社時間と退社時間の両方の存在を確認
-      if item["arriving_at"].blank? && item["leaving_at"].blank?
-        message = '一部編集が無効となった項目があります。'
-
-      # 当日以降の編集はadminユーザのみ
-      elsif attendance.attendance_date > Date.current && !current_user.admin?
-        message = '明日以降の勤怠編集は出来ません。'
-        error_count += 1
-
-      #出社時間 > 退社時間ではないか
-      elsif item["arriving_at"].to_s > item["leaving_at"].to_s
-        message = '出社時間より退社時間が早い項目がありました'
-        error_count += 1
+    #承認かつidが上長current_userの勤怠
+    @attendances = Attendance.where(change_confirmation_status: :approval, change_confirmation_approver_id: current_user.id)
+    #ユーザー（user_id)ごとに勤怠のオブジェクトを分ける
+    tmp_approval_users = @attendances.group_by(&:user_id)
+    @approval_users = {}
+      tmp_approval_users.each do |user_id, attendances|
+        attendance_arr = []
+        attendances.each do |attendance|
+        attendance_arr << attendance
       end
-    end #eachの締め
-
-    if error_count > 0
-      flash[:warning] = message
-    else
-      attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-
-        # 当日以降の編集はadminユーザのみ
-        if item["arriving_at"].blank? && item["leaving_at"].blank?
-
-        else 
-          if params["attendances"][id]["change_confirmation_approver_id"]
-            item["before_change_arriving_at"] = attendance.arriving_at
-            item["before_change_leaving_at"] = attendance.leaving_at
-            item["change_confirmation_approver_id"] = User.where(name: params["attendances"][id]["change_confirmation_approver_id"]).first.id.to_i
-            item["change_confirmation_status"] = :pending
-            attendance.update_attributes(item)
-            flash[:success] = '勤怠時間を更新しました。'
-          else
-            attendance.update_attributes(item)
-            flash[:success] = '勤怠時間を更新しました。'
-          end
-        end
-      end #eachの締め
+      #storeメソッドでハッシュにキーkeyと値valのペアを追加
+      @approval_users.store(User.find(user_id), attendance_arr)
     end
-    redirect_to attendances_url(@user, params:{ id: @user.id, first_day: params[:first_day]})
   end
 
   private

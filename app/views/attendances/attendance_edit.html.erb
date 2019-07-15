@@ -4,7 +4,6 @@
   <%= form_for(@user, url: attendance_update_all_path, method: :post) do |f| %>
     <table class = "table-bordered table-striped table-condensed">
       <thead>
-        <thead>
           <tr>
             <th width = "10%">日付</th>
             <th width = "5%">曜日</th>
@@ -15,13 +14,12 @@
             <th width = "29%">備考</th>
             <th width = "18%">指示者確認（印）</th>
           </tr>
-        </thead>
       </thead>
       <tbody>
-      <%= hidden_field_tag :id, @user.id %>
-      <%= hidden_field_tag :first_day, @first_day %>
-      <% @attendances.each do |d| %>
-      <%= fields_for "attendances[]", d do |tf| %>
+        <%= hidden_field_tag :id, @user.id %>
+        <%= hidden_field_tag :first_day, @first_day %>
+        <% @attendances.each do |d| %>
+        <%= fields_for "attendances[]", d do |tf| %>
         <tr>
           <!--日付-->
           <td class = "attendance_date"><%= d.attendance_date.to_s(:attendance_date) %></td>
@@ -40,13 +38,14 @@
           <!--指示者確認（印）セレクトフォーム-->
           <td><%= tf.select :change_confirmation_approver_id, options_for_select(@seniors) %></td>
         </tr>
-      <% end %>
-      <% end %>
+        <% end %>
+        <% end %>
       </tbody>
     </table>
-    <center>
+    <br>
+  <center>
     <%= f.submit "編集内容を更新", style:"width:300px", class: "btn btn-primary" %>
-    <% end %>
+  <% end %>
     <%= link_to "キャンセル", user_url(@user, params:{first_day: @first_day }), style:"width:300px", class: "btn btncancel btn-default" %>
-    </center>
+  </center>
 </div>
