@@ -1,11 +1,11 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="overwork_confirmation_form">
-      <% @pending_users.each do |user, attendances| %>
-      <div class="modal-header">
-        <h2>【<%= user.name %>からの勤怠変更申請】</h2>
-      <div>
-        <%= form_tag(overwork_confirmation_status_update_path, method: :post) do %>
+      <%= form_tag(overwork_confirmation_status_update_path, method: :post) do %>
+        <% @pending_users.each do |user, attendances| %>
+        <div class="modal-header">
+          <h2>【<%= user.name %>からの勤怠変更申請】</h2>
+        <div>
         <div class="modal-body">
           <table class="table table-bordered table-striped table-condensed">
             <thead>
@@ -23,6 +23,7 @@
             </thead>
           <tbody>
             <% attendances.each do |attendance| %>
+              <%= hidden_field_tag 'attendances[][user_name]', user.name %>
             <tr>
               <!--日付-->
               <%= hidden_field_tag 'attendances[][attendance_date]', attendance.attendance_date %>
@@ -38,9 +39,9 @@
               <!-- 業務処理内容の表示  -->
               <td class="table-body"><%= attendance.task_memo %></td>
               <!-- 指示者確認（印）の表示  -->
-              <td class="table-body"><%= select_tag 'attendance[overwork_status]', options_for_select([["なし", "nothing"], ["申請中", "pending"],["承認", "approval"], ["否認", "denial"]]) %></td>
+              <td class="table-body"><%= select_tag 'attendances[][overwork_status]', options_for_select([["なし", "nothing"], ["申請中", "pending"],["承認", "approval"], ["否認", "denial"]]) %></td>
               <!-- 変更の表示  -->
-              <td class="table-body"><%= check_box_tag :change_confirmation_checked %></td>
+              <td class="table-body"><%= check_box_tag('attendances[][overwork_confirmation_checked]', attendance.id) %></td>
               <!-- 勤怠を確認するの表示  -->
               <td class="table-body"><%= link_to "確認", monthly_attendance_show_path(params: { user_name: user.name, year_month: "#{attendance.attendance_date.year}" + "#{attendance.attendance_date.month}"}), :style=>"color:white;", class: "btn btn-sm btn-primary" %></td>
             </tr>
@@ -48,10 +49,10 @@
           </tbody>
           </table>
         </div>
+        <% end %>
         <div class="modal-footer">
           <%= submit_tag "変更を送信する", class: "btn btn-primary btn-sm" %>
         </div>
-        <% end %>
       <% end %>
     </div>
   </div>

@@ -1,31 +1,31 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="change_confirmation_form">
-      <% @pending_users.each do |user, attendances| %>
-      <div class="modal-header">
-        <h2>【<%= user.name %>からの勤怠変更申請】</h2>
-      </div>
       <%= form_tag(change_confirmation_status_update_path, method: :post) do %>
-      <div class="modal-body">
-        <table class="table table-bordered table-striped table-condensed">
-          <thead>
-            <tr>
-              <th rowspan="3" class="table-header" width="50">日付</th>
-              <th rowspan="3" class="table-header" width="50">曜日</th>
-              <th colspan="4" class="table-header" width="180">変更前</th>
-              <th colspan="4" class="table-header" width="180">変更後</th>
-              <th rowspan="3" class="table-header" width="70">備考</th>
-              <th rowspan="3" class="table-header" width="130">指示者確認（印）</th>
-              <th rowspan="3" class="table-header" width="70">変更</th>
-              <th rowspan="3" class="table-header" width="130">勤怠を確認する</th>
-            </tr>
-            <tr>
-              <th colspan="2" class="table-header" width="180">出社</th>
-              <th colspan="2" class="table-header" width="180">退社</th>
-              <th colspan="2" class="table-header" width="180">出社</th>
-              <th colspan="2" class="table-header" width="180">退社</th>
-            </tr>
-            <tr>
+        <% @pending_users.each do |user, attendances| %>
+        <div class="modal-header">
+          <h2>【<%= user.name %>からの勤怠変更申請】</h2>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-striped table-condensed">
+            <thead>
+              <tr>
+                <th rowspan="3" class="table-header" width="50">日付</th>
+                <th rowspan="3" class="table-header" width="50">曜日</th>
+                <th colspan="4" class="table-header" width="180">変更前</th>
+                <th colspan="4" class="table-header" width="180">変更後</th>
+                <th rowspan="3" class="table-header" width="70">備考</th>
+                <th rowspan="3" class="table-header" width="130">指示者確認（印）</th>
+                <th rowspan="3" class="table-header" width="70">変更</th>
+                <th rowspan="3" class="table-header" width="130">勤怠を確認する</th>
+              </tr>
+              <tr>
+                <th colspan="2" class="table-header" width="180">出社</th>
+                <th colspan="2" class="table-header" width="180">退社</th>
+                <th colspan="2" class="table-header" width="180">出社</th>
+                <th colspan="2" class="table-header" width="180">退社</th>
+              </tr>
+              <tr>
                 <th class="table-header" width="50">時</th>
                 <th class="table-header" width="50">分</th>
                 <th class="table-header" width="50">時</th>
@@ -34,11 +34,11 @@
                 <th class="table-header" width="50">分</th>
                 <th class="table-header" width="50">時</th>
                 <th class="table-header" width="50">分</th>
-            </tr>
-          </thead>
-          <tbody>
-            <%= hidden_field_tag 'user_name', user.name %>
-            <% attendances.each do |d| %>
+              </tr>
+            </thead>
+            <tbody>
+              <% attendances.each do |d| %>
+                <%= hidden_field_tag 'attendances[][user_name]', user.name %>
               <tr>
                 <!--日付-->
                 <%= hidden_field_tag 'attendances[][attendance_date]', d.attendance_date %>
@@ -62,18 +62,18 @@
                 <!-- 指示者確認（印）の表示  -->
                 <td width = "10%" class="table-body"><%= select_tag 'attendances[][change_confirmation_status]', options_for_select([["なし", "nothing"], ["申請中", "pending"],["承認", "approval"], ["否認", "denial"]]) %></td>
                 <!-- 変更の表示  -->
-                <td class="table-body"><%= check_box_tag :change_confirmation_checked %></td>
+                <td class="table-body"><%= check_box_tag('attendances[]change_confirmation_checked]', d.id)%></td>
                 <!-- 勤怠を確認するの表示  -->
                 <td class="table-body"><%= link_to "確認", monthly_attendance_show_path(params: { user_name: user.name, year_month: "#{d.attendance_date.year}" + "#{d.attendance_date.month}"}), :style=>"color:white;", class: "btn btn-sm btn-primary" %></td>
               </tr>
-            <% end %>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-      <%= submit_tag "変更を送信する", class: "btn btn-primary btn-sm" %>
-      </div>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <% end %>
+        <div class="modal-footer">
+          <%= submit_tag "変更を送信する", class: "btn btn-primary btn-sm" %>
+        </div>
       <% end %>
     </div>
   </div>

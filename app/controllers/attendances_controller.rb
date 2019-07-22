@@ -279,16 +279,16 @@ class AttendancesController < ApplicationController
 
   #上長画面モーダルより、ユーザーの勤怠変更申請勤を保存
   def change_confirmation_status_update
-    @user = User.where(name: params[:user_name]).first
     params[:attendances].each do |d|
-      attendace = Attendace.where(attendance_date: d[:attendance_date], user_id: @user.id).first
-      attendace.change_confirmation_status = d[:change_confirmation_status]
+      user = User.where(name: d[:user_name]).first
+      attendance = Attendance.where(attendance_date: d[:attendance_date], user_id: user.id).first
+      attendance.change_confirmation_status = d[:change_confirmation_status]
       #チェックボックスはifで分岐だけでデータベースには入れない
-      if params[:change_confirmation_checked]
-        attendance.attendance_date = @attendance.attendance_date
-        attendace.save
+      if d[:change_confirmation_checked]
+        attendance.save
       end
     end
+    redirect_to attendances_path, notice: '勤怠変更申請のお知らせを更新しました。'
   end
 
   def overwork_confirmation_form
@@ -309,6 +309,16 @@ class AttendancesController < ApplicationController
   end
 
   def overwork_confirmation_status_update
+    params[:attendances].each do |d|
+      user = User.where(name: d[:user_name]).first
+      attendance = Attendance.where(attendance_date: d[:attendance_date], user_id: user.id).first
+      attendance.overwork_status = d[:overwork_status]
+      #チェックボックスはifで分岐だけでデータベースには入れない
+      if d[:overwork_confirmation_checked]
+        attendance.save
+      end
+    end
+    redirect_to attendances_path, notice: '残業申請のお知らせを更新しました。'
   end
 
   def attendance_logs

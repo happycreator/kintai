@@ -32,15 +32,12 @@ name:  'User1',
 password:              'password',
 password_confirmation: 'password',
 # service_id: 1,
-line_id: '123456')
-
 
 User.create(email: 'user2@gmail.com',
 name:  'User2',
 password: "password",
 password_confirmation: 'password',
 #service_id: 1,
-line_id: '123457')
 
 User.create!(name:  "Example User",
   email: "example@railstutorial.org",
