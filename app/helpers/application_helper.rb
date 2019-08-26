@@ -11,6 +11,10 @@ module ApplicationHelper
   end
   
   def time_format(time)
+    if time
     format("%.2f", (((time.hour * 60) + time.min).to_d / 60.to_d))
+    else
+      ""
+    end
   end
 end

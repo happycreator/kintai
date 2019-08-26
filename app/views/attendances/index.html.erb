@@ -143,6 +143,9 @@
         </td>
         <!-- 時間外時間の表示 （ -->
         <td class="table-body">
+          <% if attendance.overtime && @user.end_attendance_time %>
+          <%= "#{attendance.overtime.try(:hour) - @user.end_attendance_time.try(:hour)}:#{sprintf('%02d', attendance.overtime.try(:min) - @user.end_attendance_time.try(:min))}" %>
+          <% end %>
         </td>
         <!-- 業務処理内容の表示  -->
         <td class="table-body"><%= attendance.task_memo %>

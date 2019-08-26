@@ -27,34 +27,48 @@
 #   line: '654321')
 
 ## Users
-User.create(email: 'user1@gmail.com',
-name:  'User1',
-password:              'password',
-password_confirmation: 'password',
-# service_id: 1,
+User.create(name:  "User1",
+email: "user1@example.com",
+password:              "password",
+password_confirmation: "password",
+activated: true,
+activated_at: Time.zone.now)
 
-User.create(email: 'user2@gmail.com',
-name:  'User2',
-password: "password",
-password_confirmation: 'password',
-#service_id: 1,
+User.create(name:  "User2",
+email: "user2@example.com",
+password:              "password",
+password_confirmation: "password",
+activated: true,
+activated_at: Time.zone.now)
 
-User.create!(name:  "Example User",
-  email: "example@railstutorial.org",
-  password:              "foobar",
-  password_confirmation: "foobar",
+User.create(name:  "Senior1",
+  email: "senior1@example.com",
+  password:              "password",
+  password_confirmation: "password",
+  is_senior:     true,
+  activated: true,
+  activated_at: Time.zone.now)
+
+User.create(name:  "Senior2",
+  email: "senior2@example.com",
+  password:              "password",
+  password_confirmation: "password",
+  is_senior:     true,
+  activated: true,
+  activated_at: Time.zone.now)
+
+User.create(name:  "Admin1",
+  email: "admin1@example.com",
+  password:              "password",
+  password_confirmation: "password",
   admin:     true,
   activated: true,
   activated_at: Time.zone.now)
 
-99.times do |n|
-  name  = Faker::Name.name
-  email = "example-#{n+1}@railstutorial.org"
-  password = "password"
-  User.create!(name:  name,
-              email: email,
-              password:              password,
-              password_confirmation: password,
-              activated: true,
-              activated_at: Time.zone.now)
-end
+User.create(name:  "Admin2",
+  email: "admin2@example.com",
+  password:              "password",
+  password_confirmation: "password",
+  admin:     true,
+  activated: true,
+  activated_at: Time.zone.now)

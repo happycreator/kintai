@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190530124354) do
+ActiveRecord::Schema.define(version: 20190825111652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20190530124354) do
     t.integer  "monthly_confirmation_status"
     t.datetime "before_change_arriving_at"
     t.datetime "before_change_leaving_at"
+    t.datetime "monthly_confirmation_approval_on"
     t.index ["user_id"], name: "index_attendances_on_user_id", using: :btree
   end
 

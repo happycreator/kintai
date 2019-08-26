@@ -18,14 +18,14 @@
             </thead>
             <tbody>
               <% attendances.each do |year_month| %>
-                <%= hidden_field_tag 'user_name', user.name %>
+                <%= hidden_field_tag 'attendances[][user_name]', user.name %>
               <tr>
                 <!--月-->
-                <td class = "attendance_date"><%= hidden_field_tag 'year_month', year_month %><%= year_month[4] %>月</td>
+                <td class = "attendance_date"><%= hidden_field_tag 'attendances[][year_month]', year_month %><%= year_month[4] %>月</td>
                 <!--指示者確認（印)-->
-                <td><%= select_tag 'attendance[monthly_confirmation_status]', options_for_select([["なし", "nothing"], ["申請中", "pending"],["承認", "approval"], ["否認", "denial"]]) %></td>
+                <td><%= select_tag 'attendances[][monthly_confirmation_status]', options_for_select([["なし", "nothing"], ["申請中", "pending"],["承認", "approval"], ["否認", "denial"]]) %></td>
                 <!--変更のチェックボックス、チェックがないと変更しても反映されない-->
-              　<td><%= check_box_tag :monthly_confirmation_checked %></td>
+              　<td><%= check_box_tag('attendances[][monthly_confirmation_checked]',year_month) %></td>
                 <!--勤怠を確認するボタン・誰の何月分の勤怠-->
                 <td><%= link_to "確認", monthly_attendance_show_path(params: { user_name: user.name, year_month: year_month }), :style=>"color:white;", class: "btn btn-sm btn-primary" %></td>
               </tr>

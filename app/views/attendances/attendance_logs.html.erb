@@ -1,4 +1,10 @@
 <h1>勤怠ログ</h1>
+<%= form_tag(attendance_logs_path, method: :post) do %>
+  <%= select_tag('select_year', options_for_select((2017..2019), class:'option', selected: @select_year), onchange: "this.form.submit()") %>
+  <%= select_tag('select_month', options_for_select((1..12), class:'option', selected: @select_month), onchange: "this.form.submit()") %>
+  <button value="clicked" name="reset" type="submit">リセット</button>
+<% submit_tag "検索" %>
+<% end %>
 <div>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -12,20 +18,18 @@
         <th class="table-header" width="70">承認日</td>
       </tr>
     </thead>
-    <% @approval_users.each do |user, attendances| %>
-    <% attendances.each do |attendance| %>
+    <% @attendances.each do |attendance| %>
     <tbody>
       <tr>
         <td class="table-body"><%= attendance.attendance_date %></td>
-        <td class="table-body"><%= attendance.before_change_arriving_at %></td>
-        <td class="table-body"><%= attendance.before_change_leaving_at %></td>
-        <td class="table-body"><%= attendance.arriving_at %></td>
-        <td class="table-body"><%= attendance.leaving_at %></td>
-        <td class="table-body"></td>
-        <td class="table-body"></td>
+        <td class="table-body"><%= attendance.before_change_arriving_at.strftime("%-H:%M")if attendance.before_change_arriving_at %></td>
+        <td class="table-body"><%= attendance.before_change_leaving_at.strftime("%-H:%M")if attendance.before_change_leaving_at %></td>
+        <td class="table-body"><%= attendance.arriving_at.strftime("%-H:%M")if attendance.arriving_at %></td>
+        <td class="table-body"><%= attendance.leaving_at.strftime("%-H:%M")if attendance.leaving_at %></td>
+        <td class="table-body"><%= User.find(attendance.monthly_confirmation_approver_id.to_i).name if attendance.monthly_confirmation_approver_id %></td>
+        <td class="table-body"><%= attendance.monthly_confirmation_approval_on.strftime("%m/%d") if attendance.monthly_confirmation_approval_on %></td>
       </tr>
     </tbody>
-     <% end %>
     <% end %>
   </table>
 </div>
