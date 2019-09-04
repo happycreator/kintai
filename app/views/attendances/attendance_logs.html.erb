@@ -1,10 +1,12 @@
 <h1>勤怠ログ</h1>
-<%= form_tag(attendance_logs_path, method: :post) do %>
-  <%= select_tag('select_year', options_for_select((2017..2019), class:'option', selected: @select_year), onchange: "this.form.submit()") %>
-  <%= select_tag('select_month', options_for_select((1..12), class:'option', selected: @select_month), onchange: "this.form.submit()") %>
-  <button value="clicked" name="reset" type="submit">リセット</button>
-<% submit_tag "検索" %>
-<% end %>
+<div class="select-tag">
+  <%= form_tag(attendance_logs_path, method: :post) do %>
+    <%= select_tag('select_year', options_for_select((2017..2019), class:'option', selected: @select_year), onchange: "this.form.submit()") %>
+    <%= select_tag('select_month', options_for_select((1..12), class:'option', selected: @select_month), onchange: "this.form.submit()") %>
+    <button value="clicked" name="reset" type="submit" class="select-button">リセット</button>
+  <% submit_tag "検索" %>
+  <% end %>
+</div>
 <div>
   <table class="table table-bordered table-striped table-condensed">
     <thead>

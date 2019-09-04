@@ -46,7 +46,7 @@ class AttendancesController < ApplicationController
 
   def show
   end
-
+  #残業申請モーダルフォーム
   def edit
     @attendance = Attendance.find(params[:id])
     @seniors = User.where(is_senior: true).map(&:name)
@@ -200,6 +200,7 @@ class AttendancesController < ApplicationController
     _id = User.where(name: params[:user][:name]).first.id
     #一ヶ月分の勤怠検索して上長IDとステータスの申請して保存する
     Attendance.where('attendance_date >= ? and attendance_date <= ?', @first_day-1.minute, @last_day-9.hour).update_all(:monthly_confirmation_approver_id => _id, :monthly_confirmation_status => :pending)
+    redirect_to attendances_path
   end
 
   #上長モーダル画面・ユーザーからの1ヶ月勤怠申請を表示
