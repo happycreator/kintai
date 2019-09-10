@@ -6,11 +6,11 @@ class Attendance < ApplicationRecord
   # 【所属長承認のお知らせ】一ヶ月支持者確認がログインユーザーで、ステータスが未承認かどうか＆何月分の何件の勤怠
   def self.monthly_confirmation(current_user)
     attendances = self.where(monthly_confirmation_status: :pending, monthly_confirmation_approver_id: current_user.id)
-    year_month_arr = []
-    attendances.all.each do |attendance|
-      year_month_arr << attendance.attendance_date.year.to_s + attendance.attendance_date.month.to_s
+    attendance_count = 0
+    attendances.group_by(&:user_id).each do |k, v|
+      attendance_count += v.count/30
     end
-    year_month_arr.uniq.count
+    attendance_count
   end
 
 # 【勤怠変更申請のお知らせ】勤怠変更申請の確認がログインユーザーで、ステータスが未承認かどうか＆何日の何件なのか

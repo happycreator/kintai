@@ -44,7 +44,7 @@
 <!--attendance_edit_pathに、userのidと今月の値を渡す-->
 <div class="actions">
   <%= link_to "　　　勤怠を編集　　　", attendance_edit_url(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-primary btn-sm" %>
-  <%= link_to "　　　CSV出力　　　", attendances_path(format: :csv), class: "btn btn-primary btn-sm" %>
+  <%= link_to "　　　CSV出力　　　", attendances_path(format: :csv, params: { id: @user.id, first_day: @first_day }), class: "btn btn-primary btn-sm" %>
   <%= link_to "勤怠修正ログ（承認済）", attendance_logs_path(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-primary btn-sm" %>
 </div>
 
